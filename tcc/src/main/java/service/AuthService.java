@@ -20,7 +20,10 @@ public class AuthService {
 
     public String registrar(Usuario usuario) {
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("E-mail já cadastrado!");
+            throw new RuntimeException("E-mail já em uso!");
+        }
+        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+            throw new RuntimeException("Cpf já em uso!");
         }
 
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));

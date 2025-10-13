@@ -15,7 +15,7 @@ public class Aluno extends Usuario {
     private Double peso;
     private Double altura;
     private String matricula;
-    private String Cpf;
+    private String cpf;
     private String objetivo; // Ex.: Hipertrofia, Resistência
 
     // Relacionamento com fichas de treino
