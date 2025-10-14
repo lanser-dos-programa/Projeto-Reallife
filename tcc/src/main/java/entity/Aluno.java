@@ -3,6 +3,8 @@ package entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,6 +19,13 @@ public class Aluno extends Usuario {
     private String matricula;
     private String cpf;
     private String objetivo; // Ex.: Hipertrofia, Resistência
+
+    @ManyToOne
+    @JoinColumn(name = "nutricionista_id")
+    private Nutricionista nutricionista;
+
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL)
+    private List<Dietas> dietas;
 
     // Relacionamento com fichas de treino
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL)
