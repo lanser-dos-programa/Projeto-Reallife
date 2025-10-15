@@ -20,7 +20,8 @@ public class Aluno extends Usuario {
     private String cpf;
     private String telefone;
     private String objetivo; // Ex.: Hipertrofia, Resistência
-    private boolean ativo;
+    private boolean statusAtivo;
+    public boolean planoNutricionalAtivo;
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id")

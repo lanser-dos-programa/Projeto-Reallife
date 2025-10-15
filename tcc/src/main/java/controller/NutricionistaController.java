@@ -39,7 +39,7 @@ public class NutricionistaController {
 
     // Atribuir ou atualizar dieta para um aluno já existente
     @PostMapping("/alunos/{id}/dieta")
-    public ResponseEntity<Dietas> atribuirDieta(@PathVariable Long id, @RequestBody Dieta dieta) {
+    public ResponseEntity<Dietas> atribuirDieta(@PathVariable Long id, @RequestBody Dietas dieta) {
         Aluno aluno = alunoService.buscarPorId(id);
 
         if (!aluno.isPlanoNutricionalAtivo()) {

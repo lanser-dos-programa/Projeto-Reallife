@@ -1,12 +1,9 @@
 package service;
 
 import entity.Aluno;
-import entity.Exercicio;
-import entity.Recepcao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import repository.AlunoRepository;
-import repository.RecepcaoRepository;
 
 import java.util.List;
 
@@ -15,35 +12,55 @@ import java.util.List;
 public class AlunoService {
 
     private final AlunoRepository alunoRepository;
-    // Cadastro do Aluno
-    public Aluno cadastrarAluno(Aluno aluno){
+
+    // Cadastrar aluno
+    public Aluno cadastrarAluno(Aluno aluno) {
         return alunoRepository.save(aluno);
     }
-    // Procura do ALuno
-    public List<Aluno> listarAlunos(){
+
+    // Listar todos
+    public List<Aluno> listarAlunos() {
         return alunoRepository.findAll();
-        
     }
+
+    // Buscar por ID
     public Aluno buscarPorId(Long id) {
         return alunoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
     }
 
-    // Atualizar dados de um funcionário
-    public Recepcao atualizar(Long id, Recepcao dadosAtualizados) {
+    // Atualizar dados
+    public Aluno atualizarAluno(Long id, Aluno dadosAtualizados) {
         Aluno existente = buscarPorId(id);
         existente.setNome(dadosAtualizados.getNome());
         existente.setEmail(dadosAtualizados.getEmail());
         existente.setTelefone(dadosAtualizados.getTelefone());
         existente.setAtivo(dadosAtualizados.isAtivo());
-        return RecepcaoRepository.save(existente);
+        return alunoRepository.save(existente);
     }
 
-    public void deletaraluno(Long id) {
+    // Deletar
+    public void deletarAluno(Long id) {
         if (!alunoRepository.existsById(id)) {
             throw new RuntimeException("Aluno não encontrado para exclusão.");
         }
         alunoRepository.deleteById(id);
     }
 
+    // Ativar plano nutricional
+    public Aluno ativarPlanoNutricional(Long id) {
+        Aluno aluno = buscarPorId(id);
+        if (!aluno.isAtivo()) {
+            throw new RuntimeException("Não é possível ativar plano nutricional para aluno inativo.");
+        }
+        aluno.setPlanoNutricionalAtivo(true);
+        return alunoRepository.save(aluno);
+    }
+
+    // Desativar plano nutricional
+    public Aluno desativarPlanoNutricional(Long id) {
+        Aluno aluno = buscarPorId(id);
+        aluno.setPlanoNutricionalAtivo(false);
+        return alunoRepository.save(aluno);
+    }
 }
