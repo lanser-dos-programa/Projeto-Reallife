@@ -2,9 +2,11 @@ package service;
 
 import entity.Aluno;
 import entity.Exercicio;
+import entity.Recepcao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import repository.AlunoRepository;
+import repository.RecepcaoRepository;
 
 import java.util.List;
 
@@ -25,6 +27,16 @@ public class AlunoService {
     public Aluno buscarPorId(Long id) {
         return alunoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
+    }
+
+    // Atualizar dados de um funcionário
+    public Recepcao atualizar(Long id, Recepcao dadosAtualizados) {
+        Aluno existente = buscarPorId(id);
+        existente.setNome(dadosAtualizados.getNome());
+        existente.setEmail(dadosAtualizados.getEmail());
+        existente.setTelefone(dadosAtualizados.getTelefone());
+        existente.setAtivo(dadosAtualizados.isAtivo());
+        return RecepcaoRepository.save(existente);
     }
 
     public void deletaraluno(Long id) {

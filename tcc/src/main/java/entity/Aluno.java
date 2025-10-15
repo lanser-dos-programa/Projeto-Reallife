@@ -18,7 +18,9 @@ public class Aluno extends Usuario {
     private Double altura;
     private String matricula;
     private String cpf;
+    private String telefone;
     private String objetivo; // Ex.: Hipertrofia, Resistência
+    private boolean ativo;
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id")
@@ -30,4 +32,5 @@ public class Aluno extends Usuario {
     // Relacionamento com fichas de treino
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL)
     private Set<FichaDeTreino> fichas;
+
 }

@@ -1,34 +1,31 @@
 package entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import security.Role;
+import lombok.*;
 
-@Builder
 @Entity
+@Table(name = "recepcao")
 @Data
-@Table(name = "usuarios")
-public class Usuario {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Recepcao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
+    // Nome completo do funcionário da recepção
+    @Column(nullable = false)
     private String nome;
 
-    @Column(unique = true, nullable = false)
+    // E-mail de login
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(unique = true, nullable = false)
-    private String cpf;
-
+    // Senha
     @Column(nullable = false)
     private String senha;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role; // ALUNO, PROFESSOR, ADMIN
 
     // Telefone de contato (opcional)
     private String telefone;
@@ -38,4 +35,6 @@ public class Usuario {
     private boolean ativo = true;
 
 
+    @Builder.Default
+    private String cargo = "Recepcionista";
 }
