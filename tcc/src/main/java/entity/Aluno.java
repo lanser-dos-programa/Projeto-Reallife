@@ -28,7 +28,7 @@ public class Aluno extends Usuario {
     private Nutricionista nutricionista;
 
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL)
-    private List<Dietas> dietas;
+    private List<Dieta> dietas;
 
     // Relacionamento com fichas de treino
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL)

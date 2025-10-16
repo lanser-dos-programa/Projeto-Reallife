@@ -3,29 +3,32 @@ package entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "professores")
+@Table(name = "nutricionistas")
 @Data
-@EqualsAndHashCode(callSuper = true) // herança
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Nutricionista extends Usuario {
 
     @Column(unique = true, nullable = false)
-    private String cpf;
+    private String registroProfissional;   // Exemplo: CRN
 
-    private String formacao;               // Formação a
-    private String registroProfissional;   // Ex.: CRN
+    private String formacao;
 
+    // Alunos atendidos
     @OneToMany(mappedBy = "nutricionista", cascade = CascadeType.ALL)
     private List<Aluno> alunos;
 
+    // Dietas criadas pelo nutricionista
     @OneToMany(mappedBy = "nutricionista", cascade = CascadeType.ALL)
-    private List<Dietas> dietas;
+    private List<Dieta> dietas;
 
-    // Relacionamento com dieta
-    @OneToMany(mappedBy = "Nutricionista", cascade = CascadeType.ALL)
-    private Set<Alimentos> dietasCriadas;
+    // Caso tu tenha uma entidade Alimentos
+    @OneToMany(mappedBy = "nutricionista", cascade = CascadeType.ALL)
+    private Set<Alimentos> alimentosCriados;
 }

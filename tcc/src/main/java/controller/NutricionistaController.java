@@ -1,7 +1,7 @@
 package controller;
 
 import entity.Aluno;
-import entity.Dietas;
+import entity.Dieta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,49 +18,63 @@ public class NutricionistaController {
     private final AlunoService alunoService;
     private final DietaService dietaService;
 
-    // Listar alunos que têm o plano de nutrição ativo
+    // Listar alunos com plano nutricional ativo
     @GetMapping("/alunos")
     public ResponseEntity<List<Aluno>> listarAlunosComPlanoNutricional() {
         List<Aluno> alunos = alunoService.listarAlunosComPlanoNutricional();
         return ResponseEntity.ok(alunos);
     }
 
-    // Buscar aluno específico (só pra visualizar dados básicos e dieta associada)
+    // Buscar aluno específico (com dieta)
     @GetMapping("/alunos/{id}")
-    public ResponseEntity<Aluno> buscarAlunoPorId(@PathVariable Long id) {
+    public ResponseEntity<?> buscarAlunoPorId(@PathVariable Long id) {
         Aluno aluno = alunoService.buscarPorId(id);
 
-        if (!aluno.PlanoNutricionalAtivo()) {
-            return ResponseEntity.badRequest().build(); // não tem acesso à nutrição
+        if (!aluno.isPlanoNutricionalAtivo()) {
+            return ResponseEntity.badRequest().body("Aluno não possui plano nutricional ativo");
         }
 
         return ResponseEntity.ok(aluno);
     }
 
-    // Atribuir ou atualizar dieta para um aluno já existente
+    // Atribuir ou atualizar dieta para um aluno
     @PostMapping("/alunos/{id}/dieta")
-    public ResponseEntity<Dietas> atribuirDieta(@PathVariable Long id, @RequestBody Dietas dieta) {
+    public ResponseEntity<?> atribuirDieta(@PathVariable Long id, @RequestBody Dieta dieta) {
         Aluno aluno = alunoService.buscarPorId(id);
 
         if (!aluno.isPlanoNutricionalAtivo()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Aluno não possui plano nutricional ativo");
         }
 
         Dieta novaDieta = dietaService.salvarOuAtualizarDieta(aluno, dieta);
         return ResponseEntity.ok(novaDieta);
     }
 
-    // Visualizar dieta atual de um aluno
+    // Visualizar dieta atual do aluno
     @GetMapping("/alunos/{id}/dieta")
     public ResponseEntity<Dieta> verDieta(@PathVariable Long id) {
         Dieta dieta = dietaService.buscarPorAluno(id);
         return ResponseEntity.ok(dieta);
     }
 
-    // Remover dieta de um aluno (se for necessário resetar)
+    // Remover dieta do aluno
     @DeleteMapping("/alunos/{id}/dieta")
     public ResponseEntity<Void> removerDieta(@PathVariable Long id) {
         dietaService.deletarDietaPorAluno(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Ativar plano nutricional
+    @PutMapping("/alunos/{id}/ativar-plano")
+    public ResponseEntity<Aluno> ativarPlanoNutricional(@PathVariable Long id) {
+        Aluno aluno = alunoService.ativarPlanoNutricional(id);
+        return ResponseEntity.ok(aluno);
+    }
+
+    // Desativar plano nutricional
+    @PutMapping("/alunos/{id}/desativar-plano")
+    public ResponseEntity<Aluno> desativarPlanoNutricional(@PathVariable Long id) {
+        Aluno aluno = alunoService.desativarPlanoNutricional(id);
+        return ResponseEntity.ok(aluno);
     }
 }

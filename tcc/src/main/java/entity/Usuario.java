@@ -1,14 +1,15 @@
 package entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import security.Role;
 
-@Builder
 @Entity
-@Data
 @Table(name = "usuarios")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Usuario {
 
     @Id
@@ -30,12 +31,8 @@ public class Usuario {
     @Column(nullable = false)
     private Role role; // ALUNO, PROFESSOR, ADMIN
 
-    // Telefone de contato (opcional)
     private String telefone;
 
-    // Campo pra status (ativo/inativo)
     @Builder.Default
     private boolean ativo = true;
-
-
 }

@@ -57,6 +57,11 @@ public class AlunoService {
         return alunoRepository.save(aluno);
     }
 
+    // Listar alunos com plano nutricional ativo
+    public List<Aluno> listarAlunosComPlanoNutricional() {
+        return alunoRepository.findByPlanoNutricionalAtivoTrue();
+    }
+
     // Desativar plano nutricional
     public Aluno desativarPlanoNutricional(Long id) {
         Aluno aluno = buscarPorId(id);

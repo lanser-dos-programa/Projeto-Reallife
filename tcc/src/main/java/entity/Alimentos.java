@@ -24,6 +24,6 @@ public class Alimentos {
     private double gorduras;
 
     @ManyToMany(mappedBy = "alimentos")
-    private List<Dietas> dietas;
+    private List<Dieta> dietas;
 
 }
