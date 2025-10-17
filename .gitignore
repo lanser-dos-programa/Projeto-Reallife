@@ -1,0 +1,43 @@
+# ============================
+# GERAL
+# ============================
+
+# Logs e temporários
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# IDEs e editores
+.vscode/
+.idea/
+*.iml
+*.classpath
+*.project
+*.settings/
+bin/
+out/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+
+
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.angular/cache/
+/frontend/.env
+/frontend/package-lock.json
+
+# ============================
+# GIT / DEPLOY
+# ============================
+
+# Dependências de ambiente
+.env
+.env.local
+
+# Backup do Git
+*.orig
