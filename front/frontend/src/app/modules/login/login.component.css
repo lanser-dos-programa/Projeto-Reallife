@@ -1,3 +1,8 @@
+:host {
+    display: block; /* Garante que o componente ocupe o espaço total */
+    height: 100vh;
+}
+
 /* CONTAINER PRINCIPAL: Garante que as colunas dividam a tela corretamente */
 .login-container {
     display: flex;
@@ -8,127 +13,162 @@
     background-color: #000;
 }
 
-/* 1. CAIXA DE LOGIN (A coluna preta da esquerda) */
+/* ---------------------------------------------------- */
+/* 1. CAIXA DE LOGIN (Coluna da Esquerda com Sombra) */
+/* ---------------------------------------------------- */
 .login-box {
-    /* Ajusta a proporção para 40% (mais próximo da imagem original) */
-    flex: 0 0 40%; /* Aumenta um pouco a largura da área de login */
+    /* Mantenha a largura da coluna esquerda */
+    flex: 0 0 1000px; 
+    
     display: flex;
     flex-direction: column;
-    /* Centraliza o conteúdo (formulário) VERTICALMENTE */
-    justify-content: center; 
-    /* Centraliza o conteúdo (formulário) HORIZONTALMENTE */
+    /* Altera o justify-content para empurrar o conteúdo para o topo */
+    justify-content: flex-start; 
     align-items: center; 
-    
-    background: #000; /* Fundo preto puro */
+
+    /* Altura e Margem ajustadas para centralizar a caixa na vertical */
+    height: 85vh; /* Diminuído para dar mais margem vertical visível */
+    margin: 15vh auto; /* 100vh - 85vh = 15vh. 15vh / 2 = 7.5vh de margem em cima/baixo */
+
+    background: #000; 
     padding: 0; 
-    box-shadow: none; 
     position: relative; 
+    overflow: hidden; 
+    
+    /* EFEITO DE SOMBRA (Mantenha o seu estilo Neumorfismo) */
+    box-shadow: 
+        /* Sombra principal externa (preto) */
+        -10px 0px 30px rgba(0, 0, 0, 0.9), 
+        /* Sombra sutil de contorno/luz branca (a borda brilhante sutil) */
+        0 0 50px rgba(255, 255, 255, 0.05);
+
+    /* ARREDONDAMENTO DO CARD */
+    border-radius: 20px;
+}
+/* 2. TÍTULO LOGIN */
+
+/* ---------------------------------------------------- */
+.login-title {
+    font-size: 5rem; 
+    letter-spacing: 5px;
+    font-weight: 900;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    /* Reposicionamento ABSOLUTO relativo ao .login-container */
+    position: absolute;
+    top: 5vh; /* Alinha com a margem superior do .login-box */
+    left: 150px; /* Alinha com o padding lateral do .login-box */
+    color: #FFFFFF;
+    margin: 0; 
+    line-height: 1;
+    z-index: 10; /* Garante que fique sobre qualquer coisa */
 }
 
-/* 2. TÍTULO LOGIN */
 .login-box h2 {
     font-size: 3rem; 
     letter-spacing: 2px;
     font-weight: 900;
     
-    /* Reposicionamento ABSOLUTO do título para o canto superior esquerdo */
+    /* Reposicionamento ABSOLUTO para o canto superior esquerdo do CARD */
     position: absolute;
-    top: 100px; 
-    left: 100px; 
+    top: 50px; 
+    left: 50px; 
     
     margin: 0; 
     line-height: 1; 
 }
 
 
-/* 3. AJUSTE NO FORMULÁRIO (o bloco dos inputs e botões) */
+/* 3. FORMULÁRIO (o bloco dos inputs e botões) */
 .login-box form {
-    /* Aumenta o max-width para 380px para preencher melhor a área centralizada */
-    max-width: 380px; 
+    /* Ajuste para uma largura que pareça mais estreita na referência */
+    max-width: 350px; 
     width: 100%; 
     display: flex;
     flex-direction: column;
     gap: 15px;
+    /* Altera o padding para ajustar a margem interna */
+    padding: 0 60px; /* Aumenta o padding para diminuir a largura dos inputs */
+    /* Cria o espaço no topo do formulário */
+    margin-top: 250px; /* Aumenta este valor para empurrar o form para baixo */
 }
 
-/* 4. INPUTS: Ajuste na cor de fundo e arredondamento */
+/* 4. INPUTS: Estilo de Fundo e Sombra Interna */
 .login-box input {
-    background: #2a2a2a; /* Cor de fundo ligeiramente mais clara que o preto */
+    background: #202020; 
     border: none;
     padding: 15px 12px;
-    border-radius: 8px; /* Cantos mais arredondados */
-    color: white;
+    border-radius: 8px; 
+    color: rgba(255, 255, 255, 0.5);
     outline: none;
     font-size: 1rem;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra interna sutil */
-    
-    /* Placeholders com cor mais clara */
-    &::placeholder {
-        color: #aaa;
-    }
+    /* Sombra interna para profundidade (similar ao efeito na imagem) */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.8), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
 }
 
 .login-box input:focus {
-    border: 1px solid #4a90e2; /* Foco sutil */
-    background: #222;
+    border: 1px solid #4a90e2; 
+    background: #252525;
 }
 
 /* 5. BOTÃO PRINCIPAL (CONFIRMAR) */
 .btn-primary {
-    background-color: #4a90e2; /* Azul vibrante */
+    background-color: #4a90e2; 
     border: none;
     color: white;
     padding: 15px;
-    border-radius: 8px; /* Cantos mais arredondados */
+    border-radius: 8px; 
     font-weight: 700;
     cursor: pointer;
     transition: background 0.3s;
     text-transform: uppercase;
-    margin-top: 10px;
-    width: 100%; /* Garante a mesma largura dos inputs */
+    margin-top: 15px;
+    width: 100%; 
 }
 
 .btn-primary:hover {
     background-color: #3b7cdb; 
 }
 
-/* 6. BOTÃO GOOGLE: Garante que tenha a mesma largura e alinhamento do formulário */
+/* 6. BOTÃO GOOGLE */
 .btn-google {
     background-color: white;
     color: black;
     padding: 10px;
-    border-radius: 8px; /* Cantos mais arredondados */
+    border-radius: 8px; 
     font-weight: 600;
-    border: 1px solid #ccc; 
+    border: none; 
     margin-top: 25px; 
     cursor: pointer;
     transition: 0.3s;
     
-    /* UNIFICAÇÃO DA LARGURA E ALINHAMENTO */
     width: 100%; 
-    max-width: 380px; /* Usa a mesma largura do formulário */
+    max-width: 380px; 
+    padding: 10px 60px; /* Adiciona padding lateral para alinhamento */
+    box-sizing: border-box;
     align-self: center; 
     
-    /* Layout interno para centralizar ícone e texto */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
     font-size: 0.95rem;
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.btn-google:hover {
-    background-color: #f0f0f0;
-}
-
-/* 7. IMAGEM E LOGO (Sem alterações, apenas replicação para o arquivo completo) */
+/* ---------------------------------------------------- */
+/* 7. IMAGEM E LOGO (Coluna da Direita) */
+/* ---------------------------------------------------- */
 .login-image {
+    /* Ocupa o restante do espaço */
     flex: 1; 
-    /* Use a sua URL de imagem original */
-    background: url('/front/frontend/src/app/assets/academic.jpg') center/cover no-repeat;
+    
+    /* AQUI ESTÁ SUA IMAGEM: O caminho deve ser validado no seu ambiente */
+    background: url('../../../assets/academic.jpg') center/cover no-repeat;
     position: relative;
-    /* Adiciona uma sombra suave na borda esquerda para simular a transição */
-    box-shadow: inset 10px 0 20px -5px #000;
+    
+    /* Gradiente na borda para misturar o preto */
+    box-shadow: inset 40px 0 50px -10px #000;
 }
 
 .overlay {
@@ -137,55 +177,32 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6); /* Overlay mais escuro */
+    /* Overlay mais suave para a imagem aparecer mais */
+    background: rgba(0, 0, 0, 0.4); 
 }
 
+/* LOGO REALLIFE: POSICIONAMENTO CORRETO (Topo, alinhado à direita) */
 .logo {
     position: absolute;
-    top: 40px; 
-    right: 60px; 
-    font-size: 1.5rem; 
+    top: 30px; 
+    right: 50px; /* Alinhado à direita */
+
+    font-size: 1.2rem; 
     font-weight: 500; 
     letter-spacing: 5px; 
     color: #fff; 
-    border-top: 1px solid rgba(255, 255, 255, 0.5);
-    padding-top: 10px;
-}
-
-/* Adicionando a animação de círculos (opcional, para a réplica exata) */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.circle-animation {
-    position: absolute;
-    top: 50%;
-    right: 25%; /* Ajusta a posição no lado direito da tela */
-    transform: translateY(-50%);
-    width: 120px;
-    height: 120px;
-}
-
-.circle {
-    width: 60px;
-    height: 60px;
-    background: #fff;
-    border-radius: 50%;
-    position: absolute;
-    opacity: 0.9;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
     
+    /* Linha branca sutil abaixo do logo */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 5px;
 }
 
-.circle-1 {
-    top: 0;
-    left: 0;
-    animation: spin 6s linear infinite;
-}
-
-.circle-2 {
-    bottom: 0;
-    right: 0;
-    animation: spin 6s linear reverse infinite;
-}
+.logo2 {
+ position: absolute;
+    top: 50%;
+    right: 15%; /* Posição à direita na imagem */
+    transform: translateY(-50%);
+    width: 150px; 
+    height: 150px;
+    background-image: url('../../../assets/logo2.png');
+  }

@@ -1,7 +1,6 @@
 <div class="login-container">
+  <h2 class="login-title">LOGIN</h2> 
   <div class="login-box">
-    <h2>LOGIN</h2>
-
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <input type="email" placeholder="E-MAIL/CPF" formControlName="email" />
       <input type="password" placeholder="SENHA" formControlName="senha" />
@@ -10,8 +9,7 @@
     </form>
 
     <button class="btn-google" (click)="loginGoogle()">
-      <!-- Ícone do Google. Mantenha o caminho correto no seu projeto. -->
-      <img src="caminho/para/google-icon.png" alt="Google Logo" style="width: 20px; height: 20px;" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" style="width: 20px; height: 20px;" />
       CONTINUAR COM O GOOGLE 
     </button>
   </div>
@@ -19,14 +17,8 @@
   <div class="login-image">
     <div class="overlay">
       <h1 class="logo">REALLIFE</h1>
-
-      <!-- ELEMENTO DE ANIMAÇÃO DE CÍRCULOS -->
-      <div class="circle-animation">
-        <!-- O círculo 1 está no topo/esquerda da área de animação -->
-        <div class="circle circle-1"></div>
-        <!-- O círculo 2 está no fundo/direita da área de animação -->
-        <div class="circle circle-2"></div>
-      </div>
+      
+      <div class="Logo2"></div>
     </div>
   </div>
 </div>
