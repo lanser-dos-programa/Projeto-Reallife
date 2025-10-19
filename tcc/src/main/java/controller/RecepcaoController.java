@@ -1,10 +1,13 @@
 package controller;
 
 import entity.Recepcao;
+import entity.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import security.Role;
 import service.RecepcaoService;
+import service.UsuarioService;
 
 import java.util.List;
 
@@ -14,6 +17,10 @@ import java.util.List;
 public class RecepcaoController {
 
     private final RecepcaoService recepcaoService;
+    private final UsuarioService usuarioService;
+
+
+    // CRUD Recepcionista
 
     // Cadastrar um novo funcionário da recepção
     @PostMapping
@@ -50,10 +57,20 @@ public class RecepcaoController {
         return ResponseEntity.noContent().build();
     }
 
-    // Login simples (exemplo básico, sem JWT ainda)
+    // Login simples exemplo básico, sem JWT ainda
     @PostMapping("/login")
     public ResponseEntity<Recepcao> login(@RequestParam String email, @RequestParam String senha) {
         Recepcao recepcionista = recepcaoService.login(email, senha);
         return ResponseEntity.ok(recepcionista);
+    }
+
+    // Alterar o cargo role de usuários
+    @PutMapping("/definir-role/{id}")
+    public ResponseEntity<Usuario> definirRole(
+            @PathVariable Long id,
+            @RequestParam Role role
+    ) {
+        Usuario atualizado = usuarioService.definirRole(id, role);
+        return ResponseEntity.ok(atualizado);
     }
 }
