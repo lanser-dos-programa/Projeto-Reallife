@@ -41,7 +41,7 @@
 }
 
 .menu-icon div {
-  width: 30px;
+  width: 50px;
   height: 4px;
   background-color: var(--text-light);
   margin: 5px 0;
@@ -84,6 +84,8 @@
 /* ---------------------------------- */
 
 .content-wrapper {
+  height: 100%;
+  width: 100%;
   flex: 1;
   display: flex;
   align-items: center;
