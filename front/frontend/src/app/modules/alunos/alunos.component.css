@@ -1,0 +1,285 @@
+/* Importação de uma fonte (opcional) - O original parece usar uma fonte sans-serif moderna */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
+:host {
+  display: block;
+  font-family: 'Montserrat', sans-serif; /* Fonte moderna */
+  background-color: #121212; /* Fundo preto/cinza escuro */
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.page-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* --- Cabeçalho de Navegação --- */
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    height: 100%;
+    width: 100%;
+  border-bottom: 1px solid #333;
+}
+
+.hamburger-menu button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #aaa;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #ffffff;
+}
+
+.user-icon {
+  font-size: 24px;
+  color: #fff;
+  background-color: #333;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* --- Conteúdo Principal --- */
+.content-wrapper {
+  display: flex;
+  padding: 60px 0;
+  gap: 40px;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Coluna da Esquerda --- */
+.text-content {
+  flex-basis: 40%;
+  max-width: 500px;
+}
+
+.title-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.title-wrapper h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 900;
+  margin: 0;
+  margin-left: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Círculos decorativos atrás do título "AULAS" */
+
+
+.class-selector {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 400px;
+}
+
+.class-selector select {
+  width: 100%;
+  background-color: transparent; /* remove fundo branco */
+  color: #fff;
+  font-size: 1.3rem; /* aumenta o tamanho da fonte */
+  font-weight: 700;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 12px 40px 12px 20px; /* espaço à direita para a seta */
+  appearance: none; /* remove estilo padrão do select */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+/* Remove a borda azul padrão quando clica */
+.class-selector select:focus {
+  outline: none;
+  border-color: #f94f0a;
+}
+
+.class-selector select:hover {
+  border-color: #f94f0a;
+}
+
+
+/* Cria a seta manualmente */
+.class-selector::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none; /* seta não interfere no clique */
+  font-size: 0.9rem;
+}
+
+/* --- Aparência escura do dropdown --- */
+.class-selector select option {
+  background-color: #1a1a1a; /* fundo escuro */
+  color: #fff;               /* texto branco */
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  padding: 10px;
+}
+
+/* Efeito hover dentro do dropdown (nem todos navegadores aplicam, mas ajuda) */
+.class-selector select option:hover {
+  background-color: #333;
+}
+
+/* Para navegadores baseados em Webkit (Chrome, Edge, Opera) */
+.class-selector select::-webkit-scrollbar {
+  width: 8px;
+}
+
+.class-selector select::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+.class-selector select::-webkit-scrollbar-thumb:hover {
+  background-color: #f94f0a;
+}
+
+.text-content p {
+  font-size: 1rem; /* 16px */
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 35px;
+}
+
+.cta-button {
+  background-color: #F94F0A; /* Tom de laranja da imagem */
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.cta-button:hover {
+  transform: scale(1.05);
+  background-color: #e04709;
+}
+
+.instructor-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 50px;
+}
+
+.instructor-profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0; /* Impede que a imagem encolha */
+}
+
+.instructor-profile blockquote {
+  font-size: 0.875rem; /* 14px */
+  color: #aaa;
+  line-height: 1.5;
+  font-style: italic;
+  margin: 0;
+  padding-left: 15px;
+  border-left: 3px solid #555; /* Linha de citação */
+}
+
+/* --- Coluna da Direita (Grid de Imagens) --- */
+.image-grid {
+  flex-basis: 60%;
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+
+  grid-template-areas:
+    "main top-right"
+    "main bottom-right";
+}
+
+.image-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px; /* Cantos arredondados */
+}
+
+.img-main {
+  grid-area: main;
+  min-height: 400px; /* Garante altura na imagem principal */
+}
+.img-top-right {
+  grid-area: top-right;
+}
+.img-bottom-right {
+  grid-area: bottom-right;
+}
+
+/* --- Responsividade (Exemplo simples) --- */
+@media (max-width: 900px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  .text-content,
+  .image-grid {
+    flex-basis: 100%;
+  }
+
+  .image-grid {
+    /* Ajusta o grid para telas menores, se necessário */
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "top-right"
+      "bottom-right";
+  }
+}
