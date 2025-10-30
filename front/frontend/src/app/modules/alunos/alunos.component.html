@@ -1,5 +1,4 @@
 <div class="page-container">
-  
   <header class="main-nav">
     <div class="hamburger-menu">
       <button aria-label="Abrir menu">&#9776;</button>
@@ -10,51 +9,48 @@
         <li><a href="#" class="active">AULAS</a></li>
         <li><a href="#">PLANOS</a></li>
       </ul>
-      <div class="user-icon" aria-label="Perfil do usuário">
-        &#128100;
-      </div>
+      <div class="user-icon" aria-label="Perfil do usuário">&#128100;</div>
     </nav>
   </header>
 
   <main class="content-wrapper">
-    
     <section class="text-content">
-      
       <div class="title-wrapper">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
         <h2>AULAS</h2>
       </div>
 
-     <!-- selector já dentro da sua estrutura original -->
-<div class="class-selector">
-  <!-- Usando ngModel para manter o select sincronizado com a model -->
-  <select [(ngModel)]="selectedNome" (ngModelChange)="onSelectedChange($event)">
-    <option *ngFor="let aula of aulas" [ngValue]="aula.nome">
-      {{ aula.nome }}
-    </option>
-  </select>
-</div>
+      <div class="class-selector">
+        <select [(ngModel)]="selectedNome" (ngModelChange)="onSelectedChange($event)">
+          <option *ngFor="let aula of aulas" [ngValue]="aula.nome">{{ aula.nome }}</option>
+        </select>
+      </div>
 
-<p [@fadeInOut]>{{ aulaSelecionada.descricao }}</p>
+      <p>{{ aulaSelecionada.descricao }}</p>
 
+      <button class="cta-button" (click)="abrirPopup()">VER HORÁRIOS</button>
 
-<button class="cta-button">VER HORÁRIOS</button>
-
-<div class="instructor-profile">
-  <!-- binding para foto e professor -->
-  <img [src]="aulaSelecionada.foto" alt="Foto do Sensei">
-  <blockquote>{{ aulaSelecionada.professor }}</blockquote>
-</div>
-
+      <div class="instructor-profile">
+        <img [src]="aulaSelecionada.foto" alt="Foto do Sensei">
+        <blockquote>{{ aulaSelecionada.professor }}</blockquote>
+      </div>
     </section>
 
     <section class="image-grid">
-    <img [src]="aulaSelecionada.imagens[0]" alt="Imagem principal" class="img-main">
-     <img [src]="aulaSelecionada.imagens[1]" alt="Imagem 2" class="img-top-right">
-    <img [src]="aulaSelecionada.imagens[2]" alt="Imagem 3" class="img-bottom-right">
+      <img [src]="aulaSelecionada.imagens[0]" alt="Imagem principal" class="img-main">
+      <img [src]="aulaSelecionada.imagens[1]" alt="Imagem 2" class="img-top-right">
+      <img [src]="aulaSelecionada.imagens[2]" alt="Imagem 3" class="img-bottom-right">
     </section>
-
-
   </main>
+
+  <div class="modal-overlay" *ngIf="mostrarPopup" (click)="fecharPopup()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Horários de {{ aulaSelecionada.nome }}</h3>
+      <ul>
+        <li *ngFor="let h of aulaSelecionada.horarios">
+          <strong>{{ h.dia }}:</strong> {{ h.hora }}
+        </li>
+      </ul>
+      <button class="close-btn" (click)="fecharPopup()">Fechar</button>
+    </div>
+  </div>
 </div>
