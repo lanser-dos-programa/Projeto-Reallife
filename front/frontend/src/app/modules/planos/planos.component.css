@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
+.planos-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #111;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== NAVBAR SUPERIOR ===== */
+.main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 96%;
+  height: 70px;
+  background-color: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 10;
+}
+
+.hamburger-menu button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #aaa;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #ffffff;
+}
+
+.user-icon {
+  font-size: 22px;
+  color: #fff;
+  background-color: #333;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ===== LADO ESQUERDO ===== */
+.planos-imagem {
+  flex: 0 0 46%;
+  background: url('../../../assets/gym.3.webp') center/cover no-repeat;
+  filter: brightness(0.6);
+  height: 100vh;
+}
+
+/* ===== LADO DIREITO ===== */
+.planos-conteudo {
+  flex: 0 0 54%;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 120px;
+  gap: 2rem;
+  overflow-y: auto;
+  overflow: hidden;
+}
+
+
+.titulo {
+  position: relative;
+  top: -30px;
+  text-align: center;
+  font-size: 2.5rem;
+  letter-spacing: 5px;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.titulo span {
+  display: block;
+  font-size: 1.2rem;
+  color: #bbb;
+  margin-top: 0.3rem;
+}
+
+/* ===== CARDS ===== */
+.planos-cards {
+  display: flex;
+  gap: 2rem;
+  margin-top: -20px;
+}
+
+.card {
+  background: #141414;
+  border-radius: 15px;
+  padding: 2rem 1.5rem;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.card h2 {
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+
+.preco {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.preco span {
+  display: inline-block;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.detalhes,
+.acao {
+  border: none;
+  padding: 0.6rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.detalhes {
+  background: #333;
+  color: #fff;
+}
+
+.acao {
+  background: #ff5b0a;
+  color: #fff;
+}
+
+.acao:hover {
+  background: #ff7733;
+}
+/* ===== POPUP ===== */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+}
+
+.popup-card {
+  background: #1b1b1b;
+  border-radius: 15px;
+  width: 250px;
+  padding: 1.5rem;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.popup-card h2 {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.popup-card .preco {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.popup-box {
+  background: #2a2a2a;
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 100px;
+  margin-bottom: 1rem;
+}
+
+.acao-popup {
+  background: #ff5b0a;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+
+.fechar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.logo{
+    position: absolute;
+    top: 70px;
+
+}
+
+.logo2 {
+    filter: brightness(0.4);
+  top: -100px;
+  width: 200px;
+  height: 200px;
+}
