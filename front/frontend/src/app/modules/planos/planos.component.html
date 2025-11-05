@@ -1,0 +1,58 @@
+<div class="planos-container">
+  <header class="main-nav">
+    <div class="hamburger-menu">
+      <button aria-label="Abrir menu">&#9776;</button>
+    </div>
+    <nav class="nav-links">
+      <ul>
+        <li><a href="#">TREINO</a></li>
+        <li><a href="#">AULAS</a></li>
+        <li><a href="#" class="active">PLANOS</a></li>
+      </ul>
+      <div class="user-icon" aria-label="Perfil do usuário">&#128100;</div>
+    </nav>
+  </header>
+
+  <!-- LADO ESQUERDO -->
+  <div class="planos-imagem"></div>
+
+  <!-- LADO DIREITO -->
+  <div class="planos-conteudo">
+      <h1 class="titulo">
+          PLANOS <br />
+          <span>reallife</span>
+        </h1>
+        <div class="logo">
+        <img class="logo2" src="../../../assets/logo2.png" alt="Logo" />
+        </div>
+
+    <div class="planos-cards">
+      <div class="card" *ngFor="let plano of planos">
+        <h2>{{ plano.nome }}</h2>
+        <p class="preco">
+          {{ plano.preco }} <br />
+          <span>{{ plano.parcelas }}</span>
+        </p>
+
+        <div class="botoes">
+          <button class="detalhes" (click)="abrirPopup(plano)">VER DETALHES</button>
+          <button class="acao">{{ plano.acao }}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- POPUP -->
+    <div class="popup-overlay" *ngIf="popupAberto">
+      <div class="popup-card">
+        <button class="fechar" (click)="fecharPopup()">×</button>
+        <h2>{{ planoSelecionado?.nome }}</h2>
+        <p class="preco">{{ planoSelecionado?.preco }}</p>
+        <div class="popup-box">
+          <p>{{ planoSelecionado?.descricao }}</p>
+        </div>
+        <button class="acao-popup">{{ planoSelecionado?.acao }}</button>
+      </div>
+    </div>
+
+  </div>
+</div>
