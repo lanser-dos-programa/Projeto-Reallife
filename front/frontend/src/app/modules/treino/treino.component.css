@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  height: 100vh;
+  background-color: #000000;
+}
+
+.page-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    height: 100%;
+    width: 98%;
+  border-bottom: 1px solid #333;
+}
+
+.hamburger-menu button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #aaa;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #ffffff;
+}
+
+.user-icon {
+  font-size: 24px;
+  color: #fff;
+  background-color: #333;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 80px 3rem 3rem 3rem;
+  background: black;
+  color: white;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+.content h1 {
+  font-size: 20px;
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.dias {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: fit-content;
+}
+
+.dias button {
+  background-color: #dd4112;
+  border: none;
+  border-radius: 20px;
+  padding: 0.4rem 1.5rem;
+  font-size: 28px;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.3s;
+  width: 300px;
+  height: 60px;
+}
+
+.dias button:hover {
+  background-color: #e04d1d;
+}
+
+/* removendo o bloqueio de rolagem */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  overflow: auto;
+}

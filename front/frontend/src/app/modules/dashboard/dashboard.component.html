@@ -1,0 +1,75 @@
+<div class="dashboard-container">
+  <header class="navbar">
+    <div class="menu-icon">&#9776;</div>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Aluno</a>
+      <a href="#">Aulas</a>
+    </nav>
+    <div class="nav-actions">
+      <i class="search-icon">🔍</i>
+      <i class="user-icon">👤</i>
+    </div>
+  </header>
+
+  <main class="content">
+   <section class="calendar-section card">
+  <div class="calendar-header">
+    <button (click)="previousMonth()">&#9664;</button>
+    <h2>{{ monthName }} {{ currentYear }}</h2>
+    <button (click)="nextMonth()">&#9654;</button>
+  </div>
+
+  <table class="calendar">
+    <thead>
+      <tr>
+        <th>Dom</th>
+        <th>Seg</th>
+        <th>Ter</th>
+        <th>Qua</th>
+        <th>Qui</th>
+        <th>Sex</th>
+        <th>Sáb</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let week of weeks">
+        <td *ngFor="let day of week" [class.today]="isToday(day)">
+          <span *ngIf="day !== null">{{ day }}</span>
+          <span *ngIf="day === null">&nbsp;</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>
+
+
+    <section class="students-section card">
+      <div class="section-header">
+        <h2>Lista de alunos</h2>
+        <a href="#">Ver tudo</a>
+      </div>
+      <ul class="students-list">
+        <li *ngFor="let aluno of alunos">
+          <span class="icon">👤</span>
+          <span>{{ aluno.nome }}</span>
+          <button class="edit-btn">Editar</button>
+        </li>
+      </ul>
+    </section>
+
+    <section class="classes-section card">
+      <div class="section-header">
+        <h2>Aulas</h2>
+        <a href="#">Ver tudo</a>
+      </div>
+      <div class="classes-grid">
+        <div class="class-card" *ngFor="let aula of aulas">
+          <img [src]="aula.img" [alt]="aula.nome" />
+          <span>{{ aula.nome }}</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
