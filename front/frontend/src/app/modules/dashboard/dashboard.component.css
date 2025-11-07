@@ -1,0 +1,175 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.dashboard-container {
+  background-color: #0d0d0d;
+  color: white;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to right, #000, #333);
+  padding: 10px 30px;
+  font-weight: bold;
+}
+
+.navbar nav a {
+  margin: 0 20px;
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.nav-actions i {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.menu-icon {
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 20px;
+  padding: 30px;
+}
+
+.card {
+  background-color: #1c1c1c;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+h2 {
+  color: orange;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.calendar-section {
+  text-align: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: orange;
+  margin-bottom: 10px;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  color: orange;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.calendar {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2a2a2a;
+}
+
+.calendar th {
+  background-color: orange;
+  color: #111;
+  padding: 5px;
+}
+
+.calendar td {
+  border: 1px solid #444;
+  padding: 8px;
+  height: 40px;
+  text-align: center;
+  color: white;
+}
+
+.calendar td.today {
+  background-color: orange;
+  color: #111;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header a {
+  color: orange;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.students-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.students-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  background: #2a2a2a;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.edit-btn {
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.classes-grid {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.class-card {
+  width: 100px;
+  text-align: center;
+}
+
+.class-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 5px;
+}
+
+@media (max-width: 900px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+

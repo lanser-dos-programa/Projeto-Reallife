@@ -1,0 +1,22 @@
+<div class="page-container">
+  <header class="main-nav">
+    <div class="hamburger-menu">
+      <button aria-label="Abrir menu">&#9776;</button>
+    </div>
+    <nav class="nav-links">
+      <ul>
+        <li><a href="#">TREINO</a></li>
+        <li><a href="#" class="active">AULAS</a></li>
+        <li><a href="#">PLANOS</a></li>
+      </ul>
+      <div class="user-icon" aria-label="Perfil do usuário">&#128100;</div>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h1>TREINO SEMANAL</h1>
+    <div class="dias">
+      <button *ngFor="let dia of dias">{{ dia }}</button>
+    </div>
+  </main>
+</div>
