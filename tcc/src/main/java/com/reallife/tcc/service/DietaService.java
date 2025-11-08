@@ -1,75 +1,103 @@
 package com.reallife.tcc.service;
 
-import com.reallife.tcc.entity.Aluno;
 import com.reallife.tcc.entity.Dieta;
+import com.reallife.tcc.entity.Aluno;
+import com.reallife.tcc.entity.Nutricionista;
+import com.reallife.tcc.repository.DietaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.reallife.tcc.repository.DietaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DietaService {
 
     private final DietaRepository dietaRepository;
+    private final AlunoService alunoService;
+    private final NutricionistaService nutricionistaService;
 
-    // Cadastrar dieta (padrão)
-    public Dieta cadastrarDieta(Dieta dieta) {
-        return dietaRepository.save(dieta);
-    }
+    // CADASTRO E ATUALIZAÇÃO
+    public Dieta salvarOuAtualizarDieta(Long alunoId, Dieta dieta) {
+        Aluno aluno = alunoService.buscarEntidadePorId(alunoId);
 
-    // Listar todas as dietas
-    public List<Dieta> listarDietas() {
-        return dietaRepository.findAll();
-    }
+        // Verifica se já existe dieta para este aluno
+        Optional<Dieta> dietaExistente = dietaRepository.findByAlunoId(alunoId);
 
-    // Buscar dieta por ID
-    public Dieta buscarPorId(Long id) {
-        return dietaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dieta não encontrada com o ID: " + id));
-    }
-
-    // Deletar dieta por ID
-    public void deletarDieta(Long id) {
-        if (!dietaRepository.existsById(id)) {
-            throw new RuntimeException("Dieta não encontrada para exclusão.");
-        }
-        dietaRepository.deleteById(id);
-    }
-
-    // Salvar ou atualizar dieta de um aluno
-    public Dieta salvarOuAtualizarDieta(Aluno aluno, Dieta dieta) {
-        Dieta existente = dietaRepository.findByAlunoId(aluno.getId());
-
-        if (existente != null) {
-            // Atualiza a existente
-            existente.setTipo(dieta.getTipo());
-            existente.setRefeicoes(dieta.getRefeicoes());
-            existente.setKcal(dieta.getKcal());
+        if (dietaExistente.isPresent()) {
+            // Atualiza dieta existente
+            Dieta existente = dietaExistente.get();
+            existente.setNome(dieta.getNome());
+            existente.setDescricao(dieta.getDescricao());
+            existente.setDataInicio(dieta.getDataInicio());
+            existente.setDataFim(dieta.getDataFim());
             existente.setObjetivo(dieta.getObjetivo());
+            existente.setAlimentos(dieta.getAlimentos());
             return dietaRepository.save(existente);
         } else {
-            // Cria nova e associa ao aluno
+            // Cria nova dieta
             dieta.setAluno(aluno);
+            if (aluno.getNutricionista() != null) {
+                dieta.setNutricionista(aluno.getNutricionista());
+            }
             return dietaRepository.save(dieta);
         }
     }
 
-    // Buscar dieta por ID do aluno
-    public Dieta buscarPorAluno(Long alunoId) {
-        Dieta dieta = dietaRepository.findByAlunoId(alunoId);
-        if (dieta == null) {
-            throw new RuntimeException("Nenhuma dieta encontrada para o aluno com ID: " + alunoId);
-        }
-        return dieta;
+    public Dieta criarDieta(Dieta dieta, Long alunoId, Long nutricionistaId) {
+        Aluno aluno = alunoService.buscarEntidadePorId(alunoId);
+        Nutricionista nutricionista = nutricionistaService.buscarEntidadePorId(nutricionistaId);
+
+        dieta.setAluno(aluno);
+        dieta.setNutricionista(nutricionista);
+
+        return dietaRepository.save(dieta);
     }
 
-    // Deletar dieta associada a um aluno
-    public void deletarDietaPorAluno(Long alunoId) {
-        Dieta dieta = dietaRepository.findByAlunoId(alunoId);
-        if (dieta != null) {
-            dietaRepository.delete(dieta);
-        }
+    // CONSULTAS
+    public List<Dieta> listarTodas() {
+        return dietaRepository.findAll();
     }
-}
+
+    public Dieta buscarPorId(Long id) {
+        return dietaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dieta não encontrada com id: " + id));
+    }
+
+    public Dieta buscarPorAluno(Long alunoId) {
+        return dietaRepository.findByAlunoId(alunoId)
+                .orElseThrow(() -> new RuntimeException("Dieta não encontrada para o aluno com id: " + alunoId));
+    }
+
+    public List<Dieta> buscarPorNutricionista(Long nutricionistaId) {
+        return dietaRepository.findByNutricionistaId(nutricionistaId);
+    }
+
+    public List<Dieta> buscarDietasAtivas() {
+        return dietaRepository.findByAtivaTrue();
+    }
+
+    // ATUALIZAÇÕES
+    public Dieta atualizarDieta(Long id, Dieta dieta) {
+        Dieta existente = dietaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dieta não encontrada com id: " + id));
+
+        if (dieta.getNome() != null) existente.setNome(dieta.getNome());
+        if (dieta.getDescricao() != null) existente.setDescricao(dieta.getDescricao());
+        if (dieta.getDataInicio() != null) existente.setDataInicio(dieta.getDataInicio());
+        if (dieta.getDataFim() != null) existente.setDataFim(dieta.getDataFim());
+        if (dieta.getObjetivo() != null) existente.setObjetivo(dieta.getObjetivo());
+        if (dieta.getAlimentos() != null) existente.setAlimentos(dieta.getAlimentos());
+
+        existente.setAtiva(dieta.isAtiva());
+
+        return dietaRepository.save(existente);
+    }
+
+    // STATUS
+    public Dieta ativarDieta(Long id) {
+        Dieta dieta = dietaRepository.findById(id)
+                .or

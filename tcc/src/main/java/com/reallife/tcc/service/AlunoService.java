@@ -1,14 +1,20 @@
 package com.reallife.tcc.service;
 
+import com.reallife.tcc.dto.AlunoDto;
 import com.reallife.tcc.entity.Aluno;
+import com.reallife.tcc.entity.Nutricionista;
+import com.reallife.tcc.entity.Professor;
 import com.reallife.tcc.entity.Usuario;
 import com.reallife.tcc.repository.AlunoRepository;
+import com.reallife.tcc.repository.NutricionistaRepository;
+import com.reallife.tcc.repository.ProfessorRepository;
 import com.reallife.tcc.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +23,48 @@ public class AlunoService {
 
     private final AlunoRepository alunoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final NutricionistaRepository nutricionistaRepository;
+    private final ProfessorRepository professorRepository;
+
+    // CONVERSÕES DTO/ENTITY
+    public AlunoDto toDto(Aluno aluno) {
+        return AlunoDto.builder()
+                .id(aluno.getId())
+                .idade(aluno.getIdade())
+                .peso(aluno.getPeso())
+                .altura(aluno.getAltura())
+                .matricula(aluno.getMatricula())
+                .telefone(aluno.getTelefone())
+                .objetivo(aluno.getObjetivo())
+                .statusAtivo(aluno.isStatusAtivo())
+                .planoNutricionalAtivo(aluno.isPlanoNutricionalAtivo())
+                .nome(aluno.getUsuario().getNome())
+                .email(aluno.getUsuario().getEmail())
+                .cpf(aluno.getUsuario().getCpf())
+                .usuarioId(aluno.getUsuario().getId())
+                .nutricionistaId(aluno.getNutricionista() != null ? aluno.getNutricionista().getId() : null)
+                .professorId(aluno.getProfessor() != null ? aluno.getProfessor().getId() : null)
+                .nomeNutricionista(aluno.getNutricionista() != null ? aluno.getNutricionista().getUsuario().getNome() : null)
+                .nomeProfessor(aluno.getProfessor() != null ? aluno.getProfessor().getUsuario().getNome() : null)
+                .build();
+    }
+
+    public Aluno toEntity(AlunoDto alunoDto) {
+        return Aluno.builder()
+                .id(alunoDto.getId())
+                .idade(alunoDto.getIdade())
+                .peso(alunoDto.getPeso())
+                .altura(alunoDto.getAltura())
+                .matricula(alunoDto.getMatricula())
+                .telefone(alunoDto.getTelefone())
+                .objetivo(alunoDto.getObjetivo())
+                .statusAtivo(alunoDto.isStatusAtivo())
+                .planoNutricionalAtivo(alunoDto.isPlanoNutricionalAtivo())
+                .build();
+    }
 
     // CADASTRO
-    public Aluno cadastrarAluno(Aluno aluno, Long usuarioId) {
+    public AlunoDto cadastrarAluno(AlunoDto alunoDto, Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + usuarioId));
 
@@ -27,137 +72,163 @@ public class AlunoService {
             throw new RuntimeException("Este usuário já está vinculado a um aluno.");
         }
 
+        Aluno aluno = toEntity(alunoDto);
         aluno.setUsuario(usuario);
-        return alunoRepository.save(aluno);
-    }
-
-    public Aluno cadastrarAlunoComUsuario(Aluno aluno, Usuario usuario) {
-        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("Já existe um usuário com este email: " + usuario.getEmail());
-        }
-
-        Usuario usuarioSalvo = usuarioRepository.save(usuario);
-        aluno.setUsuario(usuarioSalvo);
-        return alunoRepository.save(aluno);
+        Aluno alunoSalvo = alunoRepository.save(aluno);
+        return toDto(alunoSalvo);
     }
 
     // CONSULTAS
-    public List<Aluno> listarAlunos() {
-        return alunoRepository.findAll();
+    public List<AlunoDto> listarAlunos() {
+        return alunoRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Aluno buscarPorId(Long id) {
+    public AlunoDto buscarPorId(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
+        return toDto(aluno);
+    }
+
+    public Aluno buscarEntidadePorId(Long id) {
         return alunoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
     }
 
-    public Aluno buscarPorUsuarioId(Long usuarioId) {
-        return alunoRepository.findByUsuarioId(usuarioId)
+    public AlunoDto buscarPorUsuarioId(Long usuarioId) {
+        Aluno aluno = alunoRepository.findByUsuarioId(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado para o usuário com id: " + usuarioId));
+        return toDto(aluno);
     }
 
-    public Aluno buscarPorEmail(String email) {
-        return alunoRepository.findByUsuarioEmail(email)
+    public AlunoDto buscarPorEmail(String email) {
+        Aluno aluno = alunoRepository.findByUsuarioEmail(email)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com email: " + email));
+        return toDto(aluno);
     }
 
-    public Aluno buscarPorMatricula(String matricula) {
-        return alunoRepository.findByMatricula(matricula)
+    public AlunoDto buscarPorMatricula(String matricula) {
+        Aluno aluno = alunoRepository.findByMatricula(matricula)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com matrícula: " + matricula));
+        return toDto(aluno);
     }
 
     // LISTAS FILTRADAS
-    public List<Aluno> listarAlunosAtivos() {
-        return alunoRepository.findByStatusAtivoTrue();
+    public List<AlunoDto> listarAlunosAtivos() {
+        return alunoRepository.findByStatusAtivoTrue()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosInativos() {
-        return alunoRepository.findByStatusAtivoFalse();
+    public List<AlunoDto> listarAlunosInativos() {
+        return alunoRepository.findByStatusAtivoFalse()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosComPlanoNutricional() {
-        return alunoRepository.findByPlanoNutricionalAtivoTrue();
+    public List<AlunoDto> listarAlunosComPlanoNutricional() {
+        return alunoRepository.findByPlanoNutricionalAtivoTrue()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosSemPlanoNutricional() {
-        return alunoRepository.findByPlanoNutricionalAtivoFalse();
+    public List<AlunoDto> listarAlunosSemPlanoNutricional() {
+        return alunoRepository.findByPlanoNutricionalAtivoFalse()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosPorNutricionista(Long nutricionistaId) {
-        return alunoRepository.findByNutricionistaId(nutricionistaId);
+    public List<AlunoDto> listarAlunosPorNutricionista(Long nutricionistaId) {
+        return alunoRepository.findByNutricionistaId(nutricionistaId)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosPorProfessor(Long professorId) {
-        return alunoRepository.findByProfessorId(professorId);
+    public List<AlunoDto> listarAlunosPorProfessor(Long professorId) {
+        return alunoRepository.findByProfessorId(professorId)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosPorObjetivo(String objetivo) {
-        return alunoRepository.findByObjetivoContainingIgnoreCase(objetivo);
+    public List<AlunoDto> listarAlunosPorObjetivo(String objetivo) {
+        return alunoRepository.findByObjetivoContainingIgnoreCase(objetivo)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosSemNutricionista() {
-        return alunoRepository.findAlunosSemNutricionista();
+    public List<AlunoDto> listarAlunosSemNutricionista() {
+        return alunoRepository.findAlunosSemNutricionista()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosSemProfessor() {
-        return alunoRepository.findAlunosSemProfessor();
+    public List<AlunoDto> listarAlunosSemProfessor() {
+        return alunoRepository.findAlunosSemProfessor()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosAtivosComPlanoNutricional() {
-        return alunoRepository.findAlunosAtivosComPlanoNutricional();
+    public List<AlunoDto> listarAlunosAtivosComPlanoNutricional() {
+        return alunoRepository.findAlunosAtivosComPlanoNutricional()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosPorFaixaEtaria(Integer idadeMin, Integer idadeMax) {
-        return alunoRepository.findByIdadeBetween(idadeMin, idadeMax);
+    public List<AlunoDto> listarAlunosPorFaixaEtaria(Integer idadeMin, Integer idadeMax) {
+        return alunoRepository.findByIdadeBetween(idadeMin, idadeMax)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosPorNome(String nome) {
-        return alunoRepository.findByUsuarioNomeContainingIgnoreCase(nome);
+    public List<AlunoDto> listarAlunosPorNome(String nome) {
+        return alunoRepository.findByUsuarioNomeContainingIgnoreCase(nome)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Aluno> listarAlunosRecentes() {
-        return alunoRepository.findTop10ByOrderByIdDesc();
+    public List<AlunoDto> listarAlunosRecentes() {
+        return alunoRepository.findTop10ByOrderByIdDesc()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     // ATUALIZAÇÕES
-    public Aluno atualizarAluno(Long id, Aluno dadosAtualizados) {
-        Aluno existente = buscarPorId(id);
+    public AlunoDto atualizarAluno(Long id, AlunoDto alunoDto) {
+        Aluno existente = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
 
-        // Atualiza apenas campos não nulos
-        if (dadosAtualizados.getIdade() != null) {
-            existente.setIdade(dadosAtualizados.getIdade());
-        }
-        if (dadosAtualizados.getPeso() != null) {
-            existente.setPeso(dadosAtualizados.getPeso());
-        }
-        if (dadosAtualizados.getAltura() != null) {
-            existente.setAltura(dadosAtualizados.getAltura());
-        }
-        if (dadosAtualizados.getTelefone() != null) {
-            existente.setTelefone(dadosAtualizados.getTelefone());
-        }
-        if (dadosAtualizados.getObjetivo() != null) {
-            existente.setObjetivo(dadosAtualizados.getObjetivo());
-        }
-        if (dadosAtualizados.getMatricula() != null) {
-            existente.setMatricula(dadosAtualizados.getMatricula());
-        }
+        if (alunoDto.getIdade() != null) existente.setIdade(alunoDto.getIdade());
+        if (alunoDto.getPeso() != null) existente.setPeso(alunoDto.getPeso());
+        if (alunoDto.getAltura() != null) existente.setAltura(alunoDto.getAltura());
+        if (alunoDto.getTelefone() != null) existente.setTelefone(alunoDto.getTelefone());
+        if (alunoDto.getObjetivo() != null) existente.setObjetivo(alunoDto.getObjetivo());
+        if (alunoDto.getMatricula() != null) existente.setMatricula(alunoDto.getMatricula());
 
-        existente.setStatusAtivo(dadosAtualizados.isStatusAtivo());
-        existente.setPlanoNutricionalAtivo(dadosAtualizados.isPlanoNutricionalAtivo());
+        existente.setStatusAtivo(alunoDto.isStatusAtivo());
+        existente.setPlanoNutricionalAtivo(alunoDto.isPlanoNutricionalAtivo());
 
-        if (dadosAtualizados.getNutricionista() != null) {
-            existente.setNutricionista(dadosAtualizados.getNutricionista());
-        }
-        if (dadosAtualizados.getProfessor() != null) {
-            existente.setProfessor(dadosAtualizados.getProfessor());
-        }
-
-        return alunoRepository.save(existente);
+        Aluno alunoAtualizado = alunoRepository.save(existente);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno atualizarDadosBasicos(Long id, Integer idade, Double peso, Double altura, String objetivo, String telefone) {
-        Aluno aluno = buscarPorId(id);
+    public AlunoDto atualizarDadosBasicos(Long id, Integer idade, Double peso, Double altura, String objetivo, String telefone) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
 
         if (idade != null) aluno.setIdade(idade);
         if (peso != null) aluno.setPeso(peso);
@@ -165,80 +236,106 @@ public class AlunoService {
         if (objetivo != null) aluno.setObjetivo(objetivo);
         if (telefone != null) aluno.setTelefone(telefone);
 
-        return alunoRepository.save(aluno);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno atualizarMedidas(Long id, Double peso, Double altura) {
-        Aluno aluno = buscarPorId(id);
+    public AlunoDto atualizarMedidas(Long id, Double peso, Double altura) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
 
         if (peso != null) aluno.setPeso(peso);
         if (altura != null) aluno.setAltura(altura);
 
-        return alunoRepository.save(aluno);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
     // STATUS E PLANOS
-    public Aluno ativarAluno(Long id) {
-        Aluno aluno = buscarPorId(id);
+    public AlunoDto ativarAluno(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
         aluno.setStatusAtivo(true);
-        return alunoRepository.save(aluno);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno desativarAluno(Long id) {
-        Aluno aluno = buscarPorId(id);
+    public AlunoDto desativarAluno(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
         aluno.setStatusAtivo(false);
-        aluno.setPlanoNutricionalAtivo(false); // Desativa plano também
-        return alunoRepository.save(aluno);
+        aluno.setPlanoNutricionalAtivo(false);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno ativarPlanoNutricional(Long id) {
-        Aluno aluno = buscarPorId(id);
+    public AlunoDto ativarPlanoNutricional(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
         if (!aluno.isStatusAtivo()) {
             throw new RuntimeException("Não é possível ativar plano nutricional para aluno inativo.");
         }
         aluno.setPlanoNutricionalAtivo(true);
-        return alunoRepository.save(aluno);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno desativarPlanoNutricional(Long id) {
-        Aluno aluno = buscarPorId(id);
+    public AlunoDto desativarPlanoNutricional(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
         aluno.setPlanoNutricionalAtivo(false);
-        return alunoRepository.save(aluno);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
     // VINCULAR PROFISSIONAIS
-    public Aluno vincularNutricionista(Long alunoId, Long nutricionistaId) {
-        Aluno aluno = buscarPorId(alunoId);
-        // Implemente a busca do nutricionista aqui
-        // Nutricionista nutricionista = nutricionistaService.buscarPorId(nutricionistaId);
-        // aluno.setNutricionista(nutricionista);
-        return alunoRepository.save(aluno);
+    public AlunoDto vincularNutricionista(Long alunoId, Long nutricionistaId) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + alunoId));
+
+        Nutricionista nutricionista = nutricionistaRepository.findById(nutricionistaId)
+                .orElseThrow(() -> new RuntimeException("Nutricionista não encontrado com id: " + nutricionistaId));
+
+        aluno.setNutricionista(nutricionista);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno vincularProfessor(Long alunoId, Long professorId) {
-        Aluno aluno = buscarPorId(alunoId);
-        // Implemente a busca do professor aqui
-        // Professor professor = professorService.buscarPorId(professorId);
-        // aluno.setProfessor(professor);
-        return alunoRepository.save(aluno);
+    public AlunoDto vincularProfessor(Long alunoId, Long professorId) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + alunoId));
+
+        Professor professor = professorRepository.findById(professorId)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado com id: " + professorId));
+
+        aluno.setProfessor(professor);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno desvincularNutricionista(Long alunoId) {
-        Aluno aluno = buscarPorId(alunoId);
+    public AlunoDto desvincularNutricionista(Long alunoId) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + alunoId));
+
         aluno.setNutricionista(null);
-        aluno.setPlanoNutricionalAtivo(false); // Desativa plano ao desvincular
-        return alunoRepository.save(aluno);
+        aluno.setPlanoNutricionalAtivo(false);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
-    public Aluno desvincularProfessor(Long alunoId) {
-        Aluno aluno = buscarPorId(alunoId);
+    public AlunoDto desvincularProfessor(Long alunoId) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + alunoId));
+
         aluno.setProfessor(null);
-        return alunoRepository.save(aluno);
+        Aluno alunoAtualizado = alunoRepository.save(aluno);
+        return toDto(alunoAtualizado);
     }
 
     // EXCLUSÃO
     public void deletarAluno(Long id) {
-        Aluno aluno = buscarPorId(id);
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
         aluno.setStatusAtivo(false);
         aluno.setPlanoNutricionalAtivo(false);
         alunoRepository.save(aluno);
@@ -251,7 +348,7 @@ public class AlunoService {
         alunoRepository.deleteById(id);
     }
 
-    // ESTATÍSTICAS E RELATÓRIOS
+    // ESTATÍSTICAS
     public long contarAlunosAtivos() {
         return alunoRepository.countByStatusAtivoTrue();
     }
@@ -281,17 +378,11 @@ public class AlunoService {
     }
 
     // BUSCA AVANÇADA
-    public List<Aluno> buscarComFiltros(Boolean statusAtivo, Boolean planoNutricionalAtivo,
-                                        Long nutricionistaId, Long professorId) {
-        return alunoRepository.findWithFilters(statusAtivo, planoNutricionalAtivo, nutricionistaId, professorId);
-    }
-
-    public List<Aluno> buscarPorFaixaDePeso(Double pesoMin, Double pesoMax) {
-        return alunoRepository.findByPesoBetween(pesoMin, pesoMax);
-    }
-
-    public List<Aluno> buscarPorFaixaDeAltura(Double alturaMin, Double alturaMax) {
-        return alunoRepository.findByAlturaBetween(alturaMin, alturaMax);
+    public List<AlunoDto> buscarComFiltros(Boolean statusAtivo, Boolean planoNutricionalAtivo, Long nutricionistaId, Long professorId) {
+        return alunoRepository.findWithFilters(statusAtivo, planoNutricionalAtivo, nutricionistaId, professorId)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     // VALIDAÇÕES
@@ -307,24 +398,15 @@ public class AlunoService {
         return alunoRepository.findByMatricula(matricula).isPresent();
     }
 
-    // VERIFICAÇÕES DE STATUS
     public boolean isAlunoAtivo(Long id) {
-        Aluno aluno = buscarPorId(id);
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
         return aluno.isStatusAtivo();
     }
 
     public boolean isPlanoNutricionalAtivo(Long id) {
-        Aluno aluno = buscarPorId(id);
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
         return aluno.isPlanoNutricionalAtivo();
-    }
-
-    public boolean temNutricionista(Long id) {
-        Aluno aluno = buscarPorId(id);
-        return aluno.getNutricionista() != null;
-    }
-
-    public boolean temProfessor(Long id) {
-        Aluno aluno = buscarPorId(id);
-        return aluno.getProfessor() != null;
     }
 }

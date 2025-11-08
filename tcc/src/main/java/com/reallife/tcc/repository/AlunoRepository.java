@@ -98,14 +98,9 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
             "(:planoNutricionalAtivo IS NULL OR a.planoNutricionalAtivo = :planoNutricionalAtivo) AND " +
             "(:nutricionistaId IS NULL OR a.nutricionista.id = :nutricionistaId) AND " +
             "(:professorId IS NULL OR a.professor.id = :professorId)")
-    List<Aluno> findWithFilters(@Param("statusAtivo") Boolean statusAtivo,
-                                @Param("planoNutricionalAtivo") Boolean planoNutricionalAtivo,
-                                @Param("nutricionistaId") Long nutricionistaId,
-                                @Param("professorId") Long professorId);
+    List<Aluno> findWithFilters(@Param("statusAtivo") Boolean statusAtivo, @Param("planoNutricionalAtivo") Boolean planoNutricionalAtivo, @Param("nutricionistaId") Long nutricionistaId, @Param("professorId") Long professorId);
 
     // Buscar top 10 alunos mais recentes
-    @Query("SELECT a FROM Aluno a ORDER BY a.id DESC LIMIT 10")
+    @Query(value = "SELECT * FROM alunos ORDER BY id DESC LIMIT 10", nativeQuery = true)
     List<Aluno> findTop10ByOrderByIdDesc();
-
-    boolean existsByEmail(String email);
 }
