@@ -3,12 +3,75 @@
   font-family: 'Poppins', sans-serif;
 }
 
+
+
 .dashboard-container {
   background-color: #0d0d0d;
   color: white;
   min-height: 100vh;
   overflow: hidden;
 }
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    height: 100%;
+    width: 98%;
+  border-bottom: 1px solid #333;
+}
+
+.hamburger-menu button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #aaa;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #ffffff;
+}
+
+.user-icon {
+  font-size: 24px;
+  color: #fff;
+  background-color: #333;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+
+
+
 
 .navbar {
   display: flex;
@@ -75,32 +138,32 @@ h2 {
   font-size: 20px;
   cursor: pointer;
 }
-
 .calendar {
   width: 100%;
   border-collapse: collapse;
   background-color: #2a2a2a;
+  color: white; /* garante contraste */
 }
 
-.calendar th {
-  background-color: orange;
-  color: #111;
-  padding: 5px;
+.calendar td span {
+  color: white; /* garante que os números apareçam */
+  display: inline-block;
+  width: 100%;
+  height: 100%;
 }
 
 .calendar td {
-  border: 1px solid #444;
-  padding: 8px;
-  height: 40px;
+  border: 1px solid #555;
+  height: 50px;
+  vertical-align: middle;
   text-align: center;
-  color: white;
 }
 
 .calendar td.today {
-  background-color: orange;
-  color: #111;
-  font-weight: bold;
+  background-color: orange !important;
+  color: #111 !important;
   border-radius: 5px;
+  font-weight: bold;
 }
 
 
@@ -171,5 +234,227 @@ h2 {
   }
 }
 
+/* ===== POPUP ===== */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
 
+.popup-content {
+  background: #f2f2f2;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 900px;
+  padding: 30px;
+  color: #222;
+  position: relative;
+  box-shadow: 0 0 20px rgba(255, 165, 0, 0.5);
+}
 
+.popup-content h2 {
+  text-align: center;
+  color: #ff6600;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #222;
+}
+
+.popup-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.popup-table th,
+.popup-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid #ccc;
+}
+
+.popup-table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.editar-btn {
+  background-color: #ff6600;
+  border: none;
+  color: white;
+  border-radius: 20px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.editar-btn:hover {
+  background-color: #ff8533;
+}
+
+.icon {
+  color: #ff6600;
+  font-size: 20px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ===== POPUP DE EDIÇÃO DE AULA ===== */
+.edit-class-popup {
+  background: #f2f2f2;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  color: #222;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.edit-class-popup img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.edit-class-popup h3 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.edit-class-popup p {
+  margin: 5px 0;
+}
+
+.edit-class-popup label {
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-top: 10px;
+}
+
+.edit-class-popup button {
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.edit-class-popup .salvar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.edit-class-popup .alunos {
+  background-color: #007bff;
+  color: white;
+}
+
+/* ===== POPUP DETALHADO DO ALUNO ===== */
+.edit-student-popup {
+  background: #f2f2f2;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 600px;
+  padding: 30px;
+  color: #222;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  text-align: left;
+  font-family: 'Poppins', sans-serif;
+}
+
+.edit-student-popup .aluno-foto {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 12px;
+}
+
+.edit-student-popup h3 {
+  text-align: center;
+  margin-bottom: 18px;
+  font-size: 18px;
+  letter-spacing: 0.6px;
+}
+
+/* grid simples 2 colunas: label / value */
+.edit-student-popup .info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.edit-student-popup .label {
+  font-weight: 700;
+  color: #333;
+}
+
+.edit-student-popup .value {
+  color: #222;
+}
+
+/* ações do popup */
+.popup-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+/* botões */
+.btn-treino {
+  background-color: #0b66d1;
+  color: #fff;
+  border: none;
+  padding: 10px 26px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+.btn-salvar {
+  background-color: #34a853;
+  color: #fff;
+  border: none;
+  padding: 10px 26px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+/* manter o overlay já existente */
+.popup-overlay { z-index: 1100; }
+
+/* botão fechar (reaproveita classe existente close-btn) */
+.popup-overlay .close-btn {
+  color: #333;
+  font-size: 22px;
+  top: 12px;
+  right: 16px;
+}
