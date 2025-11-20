@@ -1,0 +1,32 @@
+<header class="main-nav">
+
+  <div class="hamburger-menu">
+    <button aria-label="Abrir menu" (click)="toggleMenu()" >&#9776;</button>
+  </div>
+
+  <nav class="nav-links">
+    <ul>
+      <li><a routerLink="/treino" routerLinkActive="active">TREINO</a></li>
+      <li><a routerLink="/alunos" routerLinkActive="active">AULAS</a></li>
+      <li><a routerLink="/planos" routerLinkActive="active">PLANOS</a></li>
+    </ul>
+
+    <div class="user-icon" aria-label="Perfil do usuário">&#128100;</div>
+  </nav>
+
+</header>
+<div class="side-menu" [class.open]="menuOpen">
+  <ul>
+    <li><a routerLink="/home" (click)="toggleMenu()">🏠 Home</a></li>
+    <li><a routerLink="/alunos" (click)="toggleMenu()">👥 Alunos</a></li>
+    <li><a routerLink="/treino" (click)="toggleMenu()">💪 Treino</a></li>
+    <li><a routerLink="/planos" (click)="toggleMenu()">📄 Planos</a></li>
+  </ul>
+</div>
+
+
+<!-- FUNDO ESCURO AO ABRIR O MENU -->
+<div class="overlay" *ngIf="menuOpen" (click)="toggleMenu()"></div>
+<main class="page-content">
+  <router-outlet></router-outlet>
+</main>
