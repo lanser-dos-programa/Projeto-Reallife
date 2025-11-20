@@ -16,28 +16,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 🔒 Desativa CSRF (necessário pra APIs REST)
+                //  Desativa CSRF (necessário pra APIs REST)
                 .csrf(csrf -> csrf.disable())
 
-                // 🌐 Ativa CORS (usa o CorsConfig)
+                //  Ativa CORS (usa o CorsConfig)
                 .cors(Customizer.withDefaults())
 
-                // 🚦 Define quais rotas são públicas ou privadas
+                //  Define quais rotas são públicas ou privadas
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/usuarios/**").permitAll() // exemplo: rota pública
                         .anyRequest().authenticated() // o resto precisa estar autenticado
                 )
 
-                // 🔑 Autenticação HTTP básica (útil pra testes)
+                //  Autenticação HTTP básica (útil pra testes)
                 .httpBasic(Customizer.withDefaults())
 
-                // ❌ Desativa formulário de login padrão do Spring
+                //  Desativa formulário de login padrão do Spring
                 .formLogin(form -> form.disable());
 
         return http.build();
     }
 
-    // 👤 Usuário em memória (apenas pra testes)
+    // Usuário em memória (apenas pra testes)
     // Depois você pode remover e usar autenticação via banco
     @Bean
     public UserDetailsService userDetailsService() {

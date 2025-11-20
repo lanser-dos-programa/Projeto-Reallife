@@ -78,11 +78,11 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     long countByPlanoNutricionalAtivoTrue();
     long countByPlanoNutricionalAtivoFalse();
 
-    // Contar alunos por nutricionista
-    long countByNutricionistaId(Long nutricionistaId);
+    @Query("SELECT COUNT(a) FROM Aluno a WHERE a.nutricionista.id = :nutricionistaId")
+    long countByNutricionistaId(@Param("nutricionistaId") Long nutricionistaId);
 
-    // Contar alunos por professor
-    long countByProfessorId(Long professorId);
+    @Query("SELECT COUNT(a) FROM Aluno a WHERE a.professor.id = :professorId")
+    long countByProfessorId(@Param("professorId") Long professorId);
 
     // Buscar alunos por nome (através do usuário)
     @Query("SELECT a FROM Aluno a WHERE LOWER(a.usuario.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
@@ -103,4 +103,9 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     // Buscar top 10 alunos mais recentes
     @Query(value = "SELECT * FROM alunos ORDER BY id DESC LIMIT 10", nativeQuery = true)
     List<Aluno> findTop10ByOrderByIdDesc();
+
+    // Buscar alunos com data de criação recente
+    @Query("SELECT a FROM Aluno a WHERE a.usuario.dataCriacao >= :data")
+    List<Aluno> findByDataCriacaoAfter(@Param("data") java.time.LocalDateTime data);
+
 }

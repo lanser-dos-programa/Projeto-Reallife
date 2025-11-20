@@ -3,6 +3,7 @@ package com.reallife.tcc.service;
 import com.reallife.tcc.dto.NutricionistaDto;
 import com.reallife.tcc.entity.Nutricionista;
 import com.reallife.tcc.entity.Usuario;
+import com.reallife.tcc.repository.AlunoRepository;
 import com.reallife.tcc.repository.NutricionistaRepository;
 import com.reallife.tcc.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class NutricionistaService {
 
     private final NutricionistaRepository nutricionistaRepository;
     private final UsuarioRepository usuarioRepository;
-    private final AlunoService alunoService;
+    private final AlunoRepository alunoRepository;
 
     // CONVERSÕES DTO/ENTITY
     public NutricionistaDto toDto(Nutricionista nutricionista) {
@@ -35,7 +36,7 @@ public class NutricionistaService {
                 .email(nutricionista.getUsuario().getEmail())
                 .cpf(nutricionista.getUsuario().getCpf())
                 .usuarioId(nutricionista.getUsuario().getId())
-                .totalAlunos(alunoService.contarAlunosPorNutricionista(nutricionista.getId()))
+                .totalAlunos(alunoRepository.countByNutricionistaId(nutricionista.getId()))
                 .build();
     }
 

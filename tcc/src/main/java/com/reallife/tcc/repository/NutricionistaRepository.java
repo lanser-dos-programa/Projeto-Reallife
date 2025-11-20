@@ -38,9 +38,10 @@ public interface NutricionistaRepository extends JpaRepository<Nutricionista, Lo
     @Query("SELECT n FROM Nutricionista n ORDER BY n.usuario.dataCriacao DESC")
     List<Nutricionista> findAllOrderByDataCriacaoDesc();
 
-    @Query("SELECT COUNT(a) FROM Aluno a WHERE a.nutricionista.id = :nutricionistaId")
-    long countAlunosByNutricionistaId(@Param("nutricionistaId") Long nutricionistaId);
-
     @Query(value = "SELECT * FROM nutricionistas WHERE ativo = true ORDER BY id DESC LIMIT 10", nativeQuery = true)
     List<Nutricionista> findTop10Ativos();
+
+    // REMOVA OS MÉTODOS DUPLICADOS - mantenha apenas um:
+    @Query("SELECT COUNT(a) FROM Aluno a WHERE a.nutricionista.id = :nutricionistaId")
+    long countAlunosPorNutricionistaId(@Param("nutricionistaId") Long nutricionistaId);
 }

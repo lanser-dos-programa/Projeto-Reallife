@@ -20,6 +20,7 @@ public class Nutricionista {
     @Column(unique = true, nullable = false, name = "registro_profissional")
     private String registroProfissional;
 
+    private String Nome;
     private String formacao;
     private String especialidade;
     private String telefone;

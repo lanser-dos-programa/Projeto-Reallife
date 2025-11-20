@@ -13,40 +13,52 @@ import java.util.Optional;
 @Repository
 public interface DietaRepository extends JpaRepository<Dieta, Long> {
 
-    Optional<Dieta> findByAlunoId(Long alunoId);
-    List<Dieta> findByNutricionistaId(Long nutricionistaId);
+    // Buscar dieta por aluno
+    List<Dieta> findByAlunoId(Long alunoId);
+    Optional<Dieta> findByAlunoIdAndAtivaTrue(Long alunoId);
 
+    // Buscar dietas por nutricionista
+    List<Dieta> findByNutricionistaId(Long nutricionistaId);
+    List<Dieta> findByNutricionistaIdAndAtivaTrue(Long nutricionistaId);
+
+    // Buscar dietas ativas
     List<Dieta> findByAtivaTrue();
     List<Dieta> findByAtivaFalse();
 
+    // Buscar dietas por objetivo
     List<Dieta> findByObjetivo(String objetivo);
     List<Dieta> findByObjetivoContainingIgnoreCase(String objetivo);
 
+    // Buscar dietas por período
+    @Query("SELECT d FROM Dieta d WHERE d.dataInicio BETWEEN :startDate AND :endDate")
+    List<Dieta> findByPeriodo(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate);
+
+    // Buscar dietas ativas na data atual
     @Query("SELECT d FROM Dieta d WHERE d.dataInicio <= :data AND d.dataFim >= :data AND d.ativa = true")
     List<Dieta> findDietasAtivasNaData(@Param("data") LocalDate data);
 
+    // Buscar dieta ativa por aluno
     @Query("SELECT d FROM Dieta d WHERE d.aluno.id = :alunoId AND d.ativa = true")
     Optional<Dieta> findDietaAtivaPorAluno(@Param("alunoId") Long alunoId);
 
-    @Query("SELECT d FROM Dieta d WHERE d.nutricionista.id = :nutricionistaId AND d.ativa = true")
-    List<Dieta> findDietasAtivasPorNutricionista(@Param("nutricionistaId") Long nutricionistaId);
-
-    @Query("SELECT d FROM Dieta d WHERE d.dataInicio BETWEEN :startDate AND :endDate")
-    List<Dieta> findDietasPorPeriodo(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-
+    // Contar dietas
     long countByAtivaTrue();
     long countByAtivaFalse();
     long countByNutricionistaId(Long nutricionistaId);
+    long countByAlunoId(Long alunoId);
 
-    @Query("SELECT COUNT(d) FROM Dieta d WHERE d.aluno.id = :alunoId")
-    long countByAlunoId(@Param("alunoId") Long alunoId);
+    // Buscar dietas com alimentos
+    @Query("SELECT d FROM Dieta d JOIN FETCH d.alimentos WHERE d.id = :id")
+    Optional<Dieta> findByIdWithAlimentos(@Param("id") Long id);
 
+    // Buscar últimas dietas
     @Query("SELECT d FROM Dieta d ORDER BY d.dataInicio DESC")
     List<Dieta> findAllOrderByDataInicioDesc();
 
-    @Query("SELECT d FROM Dieta d WHERE d.aluno.nutricionista.id = :nutricionistaId")
-    List<Dieta> findDietasPorNutricionistaAlunos(@Param("nutricionistaId") Long nutricionistaId);
+    // Buscar top 10 dietas recentes
+    @Query(value = "SELECT * FROM dietas ORDER BY data_inicio DESC LIMIT 10", nativeQuery = true)
+    List<Dieta> findTop10Recent();
 
-    @Query(value = "SELECT * FROM dietas WHERE ativa = true ORDER BY data_inicio DESC LIMIT 10", nativeQuery = true)
-    List<Dieta> findTop10Ativas();
+    // Verificar se aluno tem dieta ativa
+    boolean existsByAlunoIdAndAtivaTrue(Long alunoId);
 }

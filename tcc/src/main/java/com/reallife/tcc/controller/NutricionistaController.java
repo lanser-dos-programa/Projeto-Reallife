@@ -1,199 +1,217 @@
 package com.reallife.tcc.controller;
 
+import com.reallife.tcc.dto.AlimentoDto;
 import com.reallife.tcc.dto.AlunoDto;
-import com.reallife.tcc.entity.Dieta;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.reallife.tcc.dto.DietaDto;
+import com.reallife.tcc.dto.NutricionistaDto;
+import com.reallife.tcc.service.AlimentosImportService;
 import com.reallife.tcc.service.AlunoService;
 import com.reallife.tcc.service.DietaService;
+import com.reallife.tcc.service.NutricionistaService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/nutricionista")
+@RequestMapping("/api/nutricionista")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class NutricionistaController {
 
     private final AlunoService alunoService;
     private final DietaService dietaService;
+    private final NutricionistaService nutricionistaService;
+    private final AlimentosImportService automacaoAlimentoService;
 
-    // Listar alunos com plano nutricional ativo
+    // ========== NUTRICIONISTAS ==========
+    @GetMapping
+    public ResponseEntity<List<NutricionistaDto>> listarNutricionistas() {
+        return ResponseEntity.ok(nutricionistaService.listarNutricionistas());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NutricionistaDto> buscarNutricionista(@PathVariable Long id) {
+        return ResponseEntity.ok(nutricionistaService.buscarPorId(id));
+    }
+
+    // ========== ALUNOS ==========
     @GetMapping("/alunos")
     public ResponseEntity<List<AlunoDto>> listarAlunosComPlanoNutricional() {
-        List<AlunoDto> alunos = alunoService.listarAlunosComPlanoNutricional();
-        return ResponseEntity.ok(alunos);
+        return ResponseEntity.ok(alunoService.listarAlunosComPlanoNutricional());
     }
 
-    // Listar todos os alunos do nutricionista
     @GetMapping("/alunos/todos")
     public ResponseEntity<List<AlunoDto>> listarTodosAlunos() {
-        List<AlunoDto> alunos = alunoService.listarAlunos();
-        return ResponseEntity.ok(alunos);
+        return ResponseEntity.ok(alunoService.listarAlunos());
     }
 
-    // Buscar aluno específico
     @GetMapping("/alunos/{id}")
-    public ResponseEntity<?> buscarAlunoPorId(@PathVariable Long id) {
-        try {
-            AlunoDto aluno = alunoService.buscarPorId(id);
-
-            if (!aluno.isPlanoNutricionalAtivo()) {
-                return ResponseEntity.badRequest().body("Aluno não possui plano nutricional ativo");
-            }
-
-            return ResponseEntity.ok(aluno);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<AlunoDto> buscarAlunoPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(alunoService.buscarPorId(id));
     }
 
-    // Buscar aluno por nome
     @GetMapping("/alunos/buscar")
     public ResponseEntity<List<AlunoDto>> buscarAlunoPorNome(@RequestParam String nome) {
-        List<AlunoDto> alunos = alunoService.listarAlunosPorNome(nome);
-        return ResponseEntity.ok(alunos);
+        return ResponseEntity.ok(alunoService.listarAlunosPorNome(nome));
     }
 
-    // Atribuir ou atualizar dieta para um aluno
-    @PostMapping("/alunos/{id}/dieta")
-    public ResponseEntity<?> atribuirDieta(@PathVariable Long id, @RequestBody Dieta dieta) {
-        try {
-            AlunoDto aluno = alunoService.buscarPorId(id);
-
-            if (!aluno.isPlanoNutricionalAtivo()) {
-                return ResponseEntity.badRequest().body("Aluno não possui plano nutricional ativo");
-            }
-
-            // Aqui você precisa implementar o método no DietaService
-            Dieta novaDieta = dietaService.salvarOuAtualizarDieta(id, dieta);
-            return ResponseEntity.ok(novaDieta);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Visualizar dieta atual do aluno
-    @GetMapping("/alunos/{id}/dieta")
-    public ResponseEntity<?> verDieta(@PathVariable Long id) {
-        try {
-            Dieta dieta = dietaService.buscarPorAluno(id);
-            return ResponseEntity.ok(dieta);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Listar todas as dietas
-    @GetMapping("/dietas")
-    public ResponseEntity<List<Dieta>> listarTodasDietas() {
-        List<Dieta> dietas = dietaService.listarTodas();
-        return ResponseEntity.ok(dietas);
-    }
-
-    // Remover dieta do aluno
-    @DeleteMapping("/alunos/{id}/dieta")
-    public ResponseEntity<Void> removerDieta(@PathVariable Long id) {
-        try {
-            dietaService.deletarDietaPorAluno(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Ativar plano nutricional
-    @PutMapping("/alunos/{id}/ativar-plano")
-    public ResponseEntity<?> ativarPlanoNutricional(@PathVariable Long id) {
-        try {
-            AlunoDto aluno = alunoService.ativarPlanoNutricional(id);
-            return ResponseEntity.ok(aluno);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // Desativar plano nutricional
-    @PutMapping("/alunos/{id}/desativar-plano")
-    public ResponseEntity<?> desativarPlanoNutricional(@PathVariable Long id) {
-        try {
-            AlunoDto aluno = alunoService.desativarPlanoNutricional(id);
-            return ResponseEntity.ok(aluno);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Vincular nutricionista ao aluno
-    @PutMapping("/alunos/{alunoId}/vincular")
-    public ResponseEntity<?> vincularAluno(@PathVariable Long alunoId,
-                                           @RequestParam Long nutricionistaId) {
-        try {
-            // Você precisa implementar este método no AlunoService
-            AlunoDto aluno = alunoService.vincularNutricionista(alunoId, nutricionistaId);
-            return ResponseEntity.ok(aluno);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // Desvincular aluno
-    @PutMapping("/alunos/{alunoId}/desvincular")
-    public ResponseEntity<?> desvincularAluno(@PathVariable Long alunoId) {
-        try {
-            AlunoDto aluno = alunoService.desvincularNutricionista(alunoId);
-            return ResponseEntity.ok(aluno);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // Listar alunos sem nutricionista
     @GetMapping("/alunos/sem-vinculo")
     public ResponseEntity<List<AlunoDto>> listarAlunosSemNutricionista() {
-        List<AlunoDto> alunos = alunoService.listarAlunosSemNutricionista();
-        return ResponseEntity.ok(alunos);
+        return ResponseEntity.ok(alunoService.listarAlunosSemNutricionista());
     }
 
-    // Estatísticas do nutricionista
-    @GetMapping("/estatisticas")
-    public ResponseEntity<?> obterEstatisticas(@RequestParam Long nutricionistaId) {
-        try {
-            long totalAlunos = alunoService.contarAlunosPorNutricionista(nutricionistaId);
-            long alunosComPlano = alunoService.contarAlunosComPlanoNutricional();
-            long totalDietas = dietaService.contarDietasPorNutricionista(nutricionistaId);
-
-            // Retorna um objeto com as estatísticas
-            return ResponseEntity.ok(new EstatisticasNutricionista(
-                    totalAlunos, alunosComPlano, totalDietas
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao obter estatísticas");
-        }
+    // ========== VINCULAÇÃO DE ALUNOS ==========
+    @PutMapping("/alunos/{alunoId}/vincular")
+    public ResponseEntity<AlunoDto> vincularAluno(@PathVariable Long alunoId,
+                                                  @RequestParam Long nutricionistaId) {
+        return ResponseEntity.ok(alunoService.vincularNutricionista(alunoId, nutricionistaId));
     }
 
-    // Classe interna para estatísticas
-    private static class EstatisticasNutricionista {
-        public long totalAlunos;
-        public long alunosComPlano;
-        public long totalDietas;
-
-        public EstatisticasNutricionista(long totalAlunos, long alunosComPlano, long totalDietas) {
-            this.totalAlunos = totalAlunos;
-            this.alunosComPlano = alunosComPlano;
-            this.totalDietas = totalDietas;
-        }
+    @PutMapping("/alunos/{alunoId}/desvincular")
+    public ResponseEntity<AlunoDto> desvincularAluno(@PathVariable Long alunoId) {
+        return ResponseEntity.ok(alunoService.desvincularNutricionista(alunoId));
     }
 
-    // Atualizar dados básicos do aluno
+    // ========== PLANOS NUTRICIONAIS ==========
+    @PutMapping("/alunos/{id}/ativar-plano")
+    public ResponseEntity<AlunoDto> ativarPlanoNutricional(@PathVariable Long id) {
+        return ResponseEntity.ok(alunoService.ativarPlanoNutricional(id));
+    }
+
+    @PutMapping("/alunos/{id}/desativar-plano")
+    public ResponseEntity<AlunoDto> desativarPlanoNutricional(@PathVariable Long id) {
+        return ResponseEntity.ok(alunoService.desativarPlanoNutricional(id));
+    }
+
+    // ========== ATUALIZAÇÕES DE ALUNOS ==========
     @PatchMapping("/alunos/{id}/dados")
-    public ResponseEntity<?> atualizarDadosAluno(@PathVariable Long id, @RequestParam(required = false) Integer idade, @RequestParam(required = false) Double peso, @RequestParam(required = false) Double altura, @RequestParam(required = false) String objetivo, @RequestParam(required = false) String telefone) {
-        try {
-            AlunoDto alunoAtualizado = alunoService.atualizarDadosBasicos(id, idade, peso, altura, objetivo, telefone);
-            return ResponseEntity.ok(alunoAtualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<AlunoDto> atualizarDadosAluno(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer idade,
+            @RequestParam(required = false) Double peso,
+            @RequestParam(required = false) Double altura,
+            @RequestParam(required = false) String objetivo,
+            @RequestParam(required = false) String telefone) {
+        return ResponseEntity.ok(alunoService.atualizarDadosBasicos(id, idade, peso, altura, objetivo, telefone));
+    }
+
+    // ========== DIETAS (CONTROLADO PELO NUTRICIONISTA) ==========
+    @PostMapping("/alunos/{alunoId}/dietas")
+    public ResponseEntity<DietaDto> criarDietaParaAluno(
+            @PathVariable Long alunoId,
+            @RequestParam Long nutricionistaId,
+            @RequestBody DietaDto dietaDto) {
+        DietaDto dietaSalva = dietaService.criarDietaParaAluno(alunoId, nutricionistaId, dietaDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dietaSalva);
+    }
+
+    @GetMapping("/{nutricionistaId}/dietas")
+    public ResponseEntity<List<DietaDto>> listarDietasDoNutricionista(@PathVariable Long nutricionistaId) {
+        return ResponseEntity.ok(dietaService.buscarPorNutricionista(nutricionistaId));
+    }
+
+    @GetMapping("/dietas/{dietaId}")
+    public ResponseEntity<DietaDto> buscarDieta(@PathVariable Long dietaId) {
+        return ResponseEntity.ok(dietaService.buscarPorId(dietaId));
+    }
+
+    @GetMapping("/alunos/{alunoId}/dieta")
+    public ResponseEntity<DietaDto> buscarDietaDoAluno(@PathVariable Long alunoId) {
+        return ResponseEntity.ok(dietaService.buscarPorAluno(alunoId));
+    }
+
+    @PutMapping("/dietas/{dietaId}")
+    public ResponseEntity<DietaDto> atualizarDieta(@PathVariable Long dietaId, @RequestBody DietaDto dietaDto) {
+        return ResponseEntity.ok(dietaService.atualizarDieta(dietaId, dietaDto));
+    }
+
+    @PostMapping("/dietas/{dietaId}/alimentos")
+    public ResponseEntity<DietaDto> adicionarAlimentos(@PathVariable Long dietaId,
+                                                       @RequestBody List<Long> alimentosIds) {
+        return ResponseEntity.ok(dietaService.adicionarAlimentos(dietaId, alimentosIds));
+    }
+
+    @DeleteMapping("/dietas/{dietaId}/alimentos")
+    public ResponseEntity<DietaDto> removerAlimentos(@PathVariable Long dietaId,
+                                                     @RequestBody List<Long> alimentosIds) {
+        return ResponseEntity.ok(dietaService.removerAlimentos(dietaId, alimentosIds));
+    }
+
+    @PatchMapping("/dietas/{dietaId}/ativar")
+    public ResponseEntity<DietaDto> ativarDieta(@PathVariable Long dietaId) {
+        return ResponseEntity.ok(dietaService.ativarDieta(dietaId));
+    }
+
+    @PatchMapping("/dietas/{dietaId}/desativar")
+    public ResponseEntity<DietaDto> desativarDieta(@PathVariable Long dietaId) {
+        return ResponseEntity.ok(dietaService.desativarDieta(dietaId));
+    }
+
+    @DeleteMapping("/dietas/{dietaId}")
+    public ResponseEntity<Void> deletarDieta(@PathVariable Long dietaId) {
+        dietaService.deletarDieta(dietaId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ========== 🎯 AUTOMAÇÃO DE ALIMENTOS ==========
+    @GetMapping("/sugestoes-alimentos")
+    public ResponseEntity<List<AlimentoDto>> obterSugestoesAlimentos(
+            @RequestParam String categoria,
+            @RequestParam String objetivo) {
+        List<AlimentoDto> sugestoes = automacaoAlimentoService
+                .sugerirAlimentosPorCategoria(categoria, objetivo);
+        return ResponseEntity.ok(sugestoes);
+    }
+
+    @PostMapping("/calcular-nutrientes")
+    public ResponseEntity<Map<String, Double>> calcularNutrientes(@RequestBody List<Long> alimentosIds) {
+        Map<String, Double> nutrientes = automacaoAlimentoService
+                .calcularNutrientesAutomaticamente(alimentosIds);
+        return ResponseEntity.ok(nutrientes);
+    }
+
+    @GetMapping("/combinar-alimentos")
+    public ResponseEntity<List<AlimentoDto>> sugerirCombinacao(
+            @RequestParam Double caloriasDesejadas,
+            @RequestParam(required = false) String restricoes) {
+        List<AlimentoDto> combinacao = automacaoAlimentoService
+                .sugerirCombinacao(caloriasDesejadas, restricoes);
+        return ResponseEntity.ok(combinacao);
+    }
+
+    @GetMapping("/alimentos/categoria/{categoria}")
+    public ResponseEntity<List<AlimentoDto>> listarAlimentosPorCategoria(@PathVariable String categoria) {
+        List<AlimentoDto> alimentos = automacaoAlimentoService.listarAlimentosPorCategoria(categoria);
+        return ResponseEntity.ok(alimentos);
+    }
+
+    @GetMapping("/alimentos/buscar")
+    public ResponseEntity<List<AlimentoDto>> buscarAlimentosPorNome(@RequestParam String nome) {
+        List<AlimentoDto> alimentos = automacaoAlimentoService.buscarAlimentosPorNome(nome);
+        return ResponseEntity.ok(alimentos);
+    }
+
+    // ========== ESTATÍSTICAS ==========
+    @GetMapping("/{nutricionistaId}/estatisticas")
+    public ResponseEntity<Map<String, Object>> obterEstatisticas(@PathVariable Long nutricionistaId) {
+        NutricionistaDto nutricionista = nutricionistaService.buscarPorId(nutricionistaId);
+        long totalAlunos = alunoService.contarAlunosPorNutricionista(nutricionistaId);
+        long alunosComPlano = alunoService.contarAlunosComPlanoNutricional();
+        long totalDietas = dietaService.contarDietasPorNutricionista(nutricionistaId);
+        long dietasAtivas = dietaService.contarDietasAtivas();
+
+        Map<String, Object> estatisticas = new HashMap<>();
+        estatisticas.put("nutricionista", nutricionista);
+        estatisticas.put("totalAlunos", totalAlunos);
+        estatisticas.put("alunosComPlano", alunosComPlano);
+        estatisticas.put("totalDietas", totalDietas);
+        estatisticas.put("dietasAtivas", dietasAtivas);
+
+        return ResponseEntity.ok(estatisticas);
     }
 }
