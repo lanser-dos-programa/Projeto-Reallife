@@ -1,17 +1,4 @@
 <div class="page-container">
-  <header class="main-nav">
-    <div class="hamburger-menu">
-      <button aria-label="Abrir menu">&#9776;</button>
-    </div>
-    <nav class="nav-links">
-      <ul>
-        <li><a href="#">TREINO</a></li>
-        <li><a href="#" class="active">AULAS</a></li>
-        <li><a href="#">PLANOS</a></li>
-      </ul>
-      <div class="user-icon" aria-label="Perfil do usuário">&#128100;</div>
-    </nav>
-  </header>
 
   <main class="content-wrapper">
     <section class="text-content">
@@ -24,9 +11,7 @@
           <option *ngFor="let aula of aulas" [ngValue]="aula.nome">{{ aula.nome }}</option>
         </select>
       </div>
-
       <p>{{ aulaSelecionada.descricao }}</p>
-
       <button class="cta-button" (click)="abrirPopup()">VER HORÁRIOS</button>
 
       <div class="instructor-profile">
