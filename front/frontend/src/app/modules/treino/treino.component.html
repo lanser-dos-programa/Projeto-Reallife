@@ -1,10 +1,42 @@
-<div class="page-container">
+<div class="treino-wrapper">
 
-
-  <main class="content">
+  <!-- LADO ESQUERDO (BOTÕES) -->
+  <div class="col-esquerda">
     <h1>TREINO SEMANAL</h1>
+
     <div class="dias">
-      <button *ngFor="let dia of dias">{{ dia }}</button>
+      <button 
+        *ngFor="let dia of dias"
+        (click)="selecionarDia(dia)"
+      >
+        {{ dia }}
+      </button>
     </div>
-  </main>
+  </div>
+
+  <!-- LADO DIREITO (TREINO SELECIONADO) -->
+  <div class="col-direita">
+
+    <div *ngIf="treinoSelecionado.length > 0; else semTreino">
+
+      <div 
+        class="exercicio" 
+        *ngFor="let item of treinoSelecionado"
+      >
+        <img [src]="item.imagem" alt="exercicio" />
+
+        <div class="info">
+          <h3>{{ item.nome }}</h3>
+          <p>{{ item.repeticoes }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <ng-template #semTreino>
+      <p class="vazio">Selecione um dia para ver o treino.</p>
+    </ng-template>
+
+  </div>
+
 </div>

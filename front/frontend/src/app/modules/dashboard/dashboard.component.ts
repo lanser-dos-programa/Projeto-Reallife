@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +20,7 @@ export class DashboardComponent implements OnInit {
     { nome: 'Funcional', img: 'assets/funcional.jpg' }
   ];
 
-  constructor() {
+  constructor(private renderer: Renderer2, private router: Router) {
     const today = new Date();
     this.currentMonth = today.getMonth();
     this.currentYear = today.getFullYear();
@@ -187,8 +188,9 @@ fecharPopupAluno(): void {
 }
 
 
-abrirTreinoAluno(aluno: any): void {
-  console.log('Abrir treino para:', aluno);
+abrirTreinoAluno(idAluno: number) {
+  this.router.navigate(['/treinoprof', idAluno]);
+
   // Aqui você pode abrir outro popup de treino se quiser
 }
 

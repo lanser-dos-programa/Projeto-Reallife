@@ -6,6 +6,9 @@ import { AlunosComponent } from './modules/alunos/alunos.component';
 import { PlanosComponent } from './modules/planos/planos.component';
 import { TreinoComponent } from './modules/treino/treino.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
+import { DietaComponent } from './modules/dieta/dieta.component';
+import { NutricionistaComponent } from './modules/nutricionista/nutricionista.component';
+import { TreinoprofComponent } from './modules/treinoprof/treinoprof.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -19,7 +22,10 @@ export const routes: Routes = [
       { path: 'alunos', component: AlunosComponent },
       { path: 'planos', component: PlanosComponent },
       { path: 'treino', component: TreinoComponent },
-      { path: 'dashboard', component: DashboardComponent }
+      { path: 'dashboard', component: DashboardComponent },
+      {path: 'dieta', component: DietaComponent},
+      {path: 'nutricionista', component: NutricionistaComponent},
+      {path: 'treinoprof', component: TreinoprofComponent}
     ]
   }
 ];

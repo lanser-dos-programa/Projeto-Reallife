@@ -6,15 +6,30 @@ app-root {
   margin: 0;
   padding: 0;
 }
-html, body {
+html {
   margin: 0;
   padding: 0;
   border: 0;
-  height: 100%;
-  width: 100%;
+  height: auto;
+  width: auto;
   overflow: hidden; /* opcional — impede rolagem */
   background-color: black; /* para garantir o fundo escuro */
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  height: auto;
+  width: auto;
+  background-color: black; /* para garantir o fundo escuro */
+}
+
+
+.scroll-liberado {
+  overflow-y: auto !important;
+}
+
 :root {
   --main-dark: #1f1f1f;
   --light-dark: #292929; 

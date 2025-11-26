@@ -1,0 +1,42 @@
+<div class="dieta-wrapper">
+
+  <!-- LADO ESQUERDO -->
+  <div class="col-esquerda">
+    <h1>DIETA SEMANAL</h1>
+
+    <div class="dias">
+      <button 
+        *ngFor="let dia of dias"
+        (click)="selecionarDia(dia)"
+      >
+        {{ dia }}
+      </button>
+    </div>
+  </div>
+
+  <!-- LADO DIREITO -->
+  <div class="col-direita">
+
+    <div *ngIf="refeicoesSelecionadas.length > 0; else naoSelecionado">
+
+      <div class="refeicao-card" *ngFor="let item of refeicoesSelecionadas">
+
+        <img [src]="item.imagem" alt="refeicao" class="foto"/>
+
+        <div class="info">
+          <h3>{{ item.refeicao }}</h3>
+          <p class="descricao">{{ item.descricao }}</p>
+          <p class="kcal">{{ item.calorias }}</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <ng-template #naoSelecionado>
+      <p class="mensagem">Selecione um dia para ver a dieta.</p>
+    </ng-template>
+
+  </div>
+
+</div>

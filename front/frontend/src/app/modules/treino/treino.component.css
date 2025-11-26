@@ -119,3 +119,69 @@ html, body {
   background: #000;
   overflow: auto;
 }
+
+.treino-wrapper {
+  display: flex;
+  height: 100vh;
+  background: black;
+  color: white;
+}
+
+/* ===== LADO ESQUERDO ===== */
+.col-esquerda {
+  width: 30%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 80px 3rem 3rem 3rem;
+  background: black;
+  color: white;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.col-esquerda h1 {
+  font-size: 25px;
+  margin-bottom: 30px;
+}
+
+
+/* ===== LADO DIREITO ===== */
+.col-direita {
+  width: 90%;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+/* ===== ITEM DE EXERCÍCIO ===== */
+.exercicio {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.exercicio img {
+  width: 90px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.info h3 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.info p {
+  color: #ccc;
+  font-size: 15px;
+}
+
+.vazio {
+  color: #777;
+  font-size: 18px;
+}
