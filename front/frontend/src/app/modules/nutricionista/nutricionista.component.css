@@ -143,7 +143,7 @@
 /* Botão adicionar alimento */
 .add-food {
   margin-top: 6px;
-  background: #dd4112; /* roxo */
+  background: #6a0dad; /* roxo */
   color: #fff;
   border: none;
   padding: 10px 14px;
@@ -152,7 +152,7 @@
   font-weight: 700;
 }
 .add-food:hover {
-  background: #dd4112;
+  background: #7b24d1;
 }
 
 /* Total por refeição */
