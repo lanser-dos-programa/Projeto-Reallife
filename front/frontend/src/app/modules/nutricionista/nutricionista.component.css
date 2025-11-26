@@ -1,0 +1,277 @@
+/* Base / fonte */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+.dashboard-container {
+  min-height: 100vh;
+  background: #0d0d0d;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Top bar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: linear-gradient(90deg,#0b0b0b,#0f0f0f);
+  border-radius: 10px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.navbar h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Layout principal */
+.page-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* Painel dos dias (esquerda) */
+.days-panel {
+  width: 30%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.days-panel button {
+  background: #dd4112;            /* laranja/quente para destaque */
+  color: #fff;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform .12s, background .12s;
+}
+
+.days-panel button:hover {
+  transform: translateY(-2px);
+  background: #e7501d;
+}
+
+.days-panel button.active {
+  outline: 3px solid rgba(106,13,173,0.12);
+  box-shadow: 0 6px 18px rgba(106,13,173,0.12);
+  background: #6a0dad; /* roxo ativo */
+}
+
+/* Painel da dieta (direita) */
+.diet-panel {
+  width: calc(70% - 24px);
+  background: transparent;
+  min-height: 60vh;
+  overflow-y: auto;
+  padding-bottom: 30px;
+}
+
+/* Card de cada refeição */
+.meal-card {
+  background: #1a1a1a; /* card dark */
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+}
+
+.meal-card h4 {
+  margin: 0 0 12px 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* Linha do alimento dentro da refeição */
+.food-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.food-row select,
+.food-row input[type="number"] {
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.food-row select {
+  min-width: 220px;
+}
+
+.food-row input[type="number"] {
+  width: 90px;
+}
+
+/* kCal do item */
+.food-row span {
+  min-width: 90px;
+  color: #ddd;
+  font-weight: 600;
+}
+
+/* Botão remover (pequeno) */
+.remove {
+  background: #b30000;
+  color: #fff;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.remove:hover {
+  background: #cc0000;
+}
+
+/* Botão adicionar alimento */
+.add-food {
+  margin-top: 6px;
+  background: #dd4112; /* roxo */
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.add-food:hover {
+  background: #dd4112;
+}
+
+/* Total por refeição */
+.meal-total {
+  margin-top: 10px;
+  color: #ccc;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Total do dia */
+.day-total {
+  margin-top: 18px;
+  padding: 14px;
+  background: #0f0f0f;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+/* Botão salvar */
+.save-btn {
+  margin-top: 18px;
+  width: 100%;
+  background: #00c853; /* verde */
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+}
+.save-btn:hover {
+  background: #00e060;
+}
+
+.input-alimento,
+.input-kcal {
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-pesquisa {
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  width: 90%;
+}
+
+.lista-sugestoes {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  position: absolute;
+  width: 90%;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  z-index: 20;
+}
+
+.lista-sugestoes li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #222;
+}
+
+.lista-sugestoes li:hover {
+  background: #222;
+}
+
+
+
+
+
+
+
+/* Responsividade básica */
+@media (max-width: 900px) {
+  .page-content {
+    flex-direction: column;
+  }
+  .days-panel {
+    width: 100%;
+    max-width: none;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+  }
+  .days-panel button {
+    min-width: 110px;
+    white-space: nowrap;
+  }
+  .diet-panel {
+    width: 100%;
+  }
+  .food-row {
+    flex-wrap: wrap;
+  }
+  .food-row select {
+    min-width: 100%;
+  }
+  .food-row input[type="number"] {
+    width: 48%;
+  }
+}

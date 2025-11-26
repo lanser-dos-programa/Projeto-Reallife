@@ -1,0 +1,57 @@
+<div class="treino-container">
+
+  <header class="titulo-header">
+    <h2>Treino semanal</h2>
+    <p class="subtitulo">Monte o treino do aluno</p>
+  </header>
+
+  <div class="layout">
+
+    <!-- COLUNA ESQUERDA -->
+    <div class="col-esquerda">
+      <div class="dias-panel">
+        <button 
+          *ngFor="let d of dias"
+          (click)="selecionarDia(d)"
+          [class.active]="diaSelecionado === d">
+          {{ d }}
+        </button>
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA -->
+    <div class="col-direita">
+      <div *ngIf="diaSelecionado" class="treino-panel">
+
+        <h3>Treino de {{ diaSelecionado }}</h3>
+
+        <div class="lista-exercicios">
+
+          <div class="exercicio-card" *ngFor="let item of treino[diaSelecionado]; let i = index">
+            
+            <select [(ngModel)]="item.exercicio">
+              <option [ngValue]="null">Selecione o exercício</option>
+              <option *ngFor="let ex of exercicios" [ngValue]="ex.nome">
+                {{ ex.nome }}
+              </option>
+            </select>
+
+            <input type="number" placeholder="Séries" [(ngModel)]="item.series">
+            <input type="number" placeholder="Repetições" [(ngModel)]="item.repeticoes">
+
+            <button class="btn-remove" (click)="removerExercicio(i)">X</button>
+
+          </div>
+
+        </div>
+
+        <button class="btn-add" (click)="adicionarExercicio()">+ Adicionar exercício</button>
+
+        <button class="btn-enviar" (click)="salvarTreino()">Salvar Treino</button>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

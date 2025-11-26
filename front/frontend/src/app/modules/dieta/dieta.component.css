@@ -1,0 +1,92 @@
+.dieta-wrapper {
+  display: flex;
+  height: 100vh;
+  background: black;
+  color: white;
+}
+
+/* ===== LADO ESQUERDO ===== */
+.col-esquerda {
+  width: 30%;
+  padding: 40px;
+}
+
+.col-esquerda h1 {
+  font-size: 22px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+}
+
+.dias {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: fit-content;
+}
+
+.dias button {
+  background-color: #dd4112;
+  border: none;
+  border-radius: 20px;
+  padding: 0.4rem 1.5rem;
+  font-size: 28px;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.3s;
+  width: 300px;
+  height: 60px;
+}
+
+.dias button:hover {
+  background-color: #e04d1d;
+}
+
+/* ===== LADO DIREITO ===== */
+.col-direita {
+  width: 90%;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+/* ===== CARD DE REFEIÇÃO ===== */
+.refeicao-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.foto {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.info h3 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.descricao {
+  color: #ccc;
+  font-size: 14px;
+  margin: 3px 0;
+}
+
+.kcal {
+  color: #dd4112;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.mensagem {
+  color: #777;
+  font-size: 18px;
+}

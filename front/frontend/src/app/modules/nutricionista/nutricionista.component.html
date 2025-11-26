@@ -1,0 +1,95 @@
+<div class="dashboard-container">
+
+  <header class="navbar">
+    <h2>Dieta Semanal</h2>
+  </header>
+
+  <div class="page-content">
+
+    <!-- PAINEL DOS DIAS -->
+    <div class="days-panel">
+      <button 
+        *ngFor="let dia of dias" 
+        (click)="selecionarDia(dia)" 
+        [class.active]="diaSelecionado === dia">
+        {{ dia }}
+      </button>
+    </div>
+
+    <!-- PAINEL DA DIETA DO DIA -->
+    <div class="diet-panel" *ngIf="diaSelecionado">
+
+      <h3>Dieta de {{ diaSelecionado }}</h3>
+
+      <!-- LOOP DAS REFEIÇÕES -->
+      <div *ngFor="let ref of refeicoes" class="meal-card">
+
+        <h4>{{ ref.nome }}</h4>
+
+        <!-- LISTA DE ALIMENTOS DA REFEIÇÃO -->
+        <div *ngFor="let item of dieta[diaSelecionado][ref.id]; let i = index" class="food-row">
+
+          <!-- SELECT DO ALIMENTO -->
+       <div class="autocomplete-container">
+  
+        <!-- Campo de pesquisa -->
+        <input 
+            type="text"
+            placeholder="Pesquisar alimento..."
+            [(ngModel)]="item.search"
+            (input)="filtrarAlimentos(item)" 
+            class="input-pesquisa"
+        />
+
+        <!-- Lista de sugestões -->
+        <ul class="lista-sugestoes" *ngIf="item.filtrados?.length > 0">
+            <li 
+            *ngFor="let f of item.filtrados" 
+            (click)="selecionarAlimento(item, f)">
+            {{ f.nome }}
+            </li>
+        </ul>
+
+        </div>
+
+    <!-- Quantidade -->
+        <input
+        type="number"
+        placeholder="Qtd"
+        [(ngModel)]="item.quantidade"
+        (input)="atualizarCalorias()"
+        />
+
+        <span>{{ item.kcal }} kcal</span>
+        <button class="remove" (click)="removerAlimento(ref.id, i)">X</button>
+
+
+        </div>
+
+        <!-- ADICIONAR ALIMENTO -->
+        <button class="add-food" (click)="adicionarAlimento(ref.id)">
+          + adicionar alimento
+        </button>
+
+        <!-- TOTAL DA REFEIÇÃO -->
+        <div class="meal-total">
+          Total: {{ totaisPorRefeicao[ref.id] }} kcal
+        </div>
+
+      </div>
+
+      <!-- TOTAL DO DIA -->
+      <div class="day-total">
+        TOTAL DO DIA: {{ totalDoDia }} kcal
+      </div>
+
+      <!-- SALVAR -->
+      <button class="save-btn" (click)="salvarDieta()">
+        Salvar Dieta
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
