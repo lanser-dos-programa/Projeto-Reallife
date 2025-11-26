@@ -25,9 +25,28 @@ body {
   background-color: black; /* para garantir o fundo escuro */
 }
 
-
 .scroll-liberado {
   overflow-y: auto !important;
+}
+
+/* Scrollbar inteira escura */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Fundo da barra */
+::-webkit-scrollbar-track {
+  background: #0d0d0d; /* mesma cor da tela */
+}
+
+/* “Thumb” (a parte que desliza) */
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
 }
 
 :root {
