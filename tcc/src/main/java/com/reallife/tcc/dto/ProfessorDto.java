@@ -25,7 +25,7 @@ public class ProfessorDto {
 
     private Long usuarioId;
 
-    // Estatísticas (opcional)
-    private Integer totalAlunos;
+    // ESTATÍSTICAS
+    private long totalAlunos;
     private Integer totalFichas;
 }

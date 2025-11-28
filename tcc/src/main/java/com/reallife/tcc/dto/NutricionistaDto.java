@@ -10,7 +10,10 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder
 public class NutricionistaDto {
+
     private Long id;
+
+    // DADOS DO NUTRICIONISTA
     private String registroProfissional;
     private String formacao;
     private String especialidade;
@@ -18,14 +21,12 @@ public class NutricionistaDto {
     private String experiencia;
     private boolean ativo;
 
-    // Dados do usuário
+    // DADOS DO USUÁRIO VINCULADO
+    private Long usuarioId;
     private String nome;
     private String email;
     private String cpf;
 
-    private Long usuarioId;
-
-    // Estatísticas
-    private Integer totalAlunos;
-    private Integer totalDietas;
+    // ESTATÍSTICAS
+    private long totalAlunos;
 }

@@ -5,7 +5,7 @@ import com.reallife.tcc.entity.*;
 import com.reallife.tcc.repository.AlunoRepository;
 import com.reallife.tcc.repository.DietaRepository;
 import com.reallife.tcc.repository.NutricionistaRepository;
-import com.reallife.tcc.repository.AlimentosRepository;
+import com.reallife.tcc.repository.AlimentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ public class DietaService {
     private final DietaRepository dietaRepository;
     private final AlunoRepository alunoRepository;
     private final NutricionistaRepository nutricionistaRepository;
-    private final AlimentosRepository alimentosRepository;
+    private final AlimentoRepository alimentosRepository;
 
     // CONVERSÕES DTO/ENTITY
     public DietaDto toDto(Dieta dieta) {

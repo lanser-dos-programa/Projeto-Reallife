@@ -158,7 +158,7 @@ public class NutricionistaController {
         return ResponseEntity.noContent().build();
     }
 
-    // ========== 🎯 AUTOMAÇÃO DE ALIMENTOS ==========
+    // ==========  AUTOMAÇÃO DE ALIMENTOS ==========
     @GetMapping("/sugestoes-alimentos")
     public ResponseEntity<List<AlimentoDto>> obterSugestoesAlimentos(
             @RequestParam String categoria,

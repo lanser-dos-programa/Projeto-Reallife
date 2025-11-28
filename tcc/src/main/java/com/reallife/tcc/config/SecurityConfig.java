@@ -2,51 +2,39 @@ package com.reallife.tcc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                //  Desativa CSRF (necessário pra APIs REST)
-                .csrf(csrf -> csrf.disable())
-
-                //  Ativa CORS (usa o CorsConfig)
-                .cors(Customizer.withDefaults())
-
-                //  Define quais rotas são públicas ou privadas
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/usuarios/**").permitAll() // exemplo: rota pública
-                        .anyRequest().authenticated() // o resto precisa estar autenticado
-                )
-
-                //  Autenticação HTTP básica (útil pra testes)
-                .httpBasic(Customizer.withDefaults())
-
-                //  Desativa formulário de login padrão do Spring
-                .formLogin(form -> form.disable());
-
-        return http.build();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
-    // Usuário em memória (apenas pra testes)
-    // Depois você pode remover e usar autenticação via banco
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User
-                .withUsername("admin")
-                .password("{noop}123456") // {noop} -> sem encoder
-                .roles("ADMIN")
-                .build();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-        return new InMemoryUserDetailsManager(user);
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll() // Libera endpoints de autenticação
+                        .requestMatchers("/public/**").permitAll() // Se tiver outros endpoints públicos
+                        .anyRequest().authenticated() // Restante precisa de autenticação
+                )
+                .formLogin(form -> form.disable()) // Desabilita form login padrão
+                .httpBasic(httpBasic -> httpBasic.disable()); // Desabilita basic auth
+
+        return http.build();
     }
 }

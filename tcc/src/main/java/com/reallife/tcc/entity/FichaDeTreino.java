@@ -3,12 +3,17 @@ package com.reallife.tcc.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "fichas_treino")
+@Table(name = "fichas")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class FichaDeTreino {
 
     @Id
@@ -16,15 +21,20 @@ public class FichaDeTreino {
     private Long id;
 
     private String nome;
-    private String descricao;
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
+    private LocalDate dataCriacao = LocalDate.now();
     private String objetivo;
-    private boolean ativa = true;
 
     @ManyToOne
     @JoinColumn(name = "aluno_id")
     private Aluno aluno;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ficha_exercicio",
+            joinColumns = @JoinColumn(name = "ficha_id"),
+            inverseJoinColumns = @JoinColumn(name = "exercicio_id")
+    )
+    private Set<Exercicio> exercicios = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "professor_id")

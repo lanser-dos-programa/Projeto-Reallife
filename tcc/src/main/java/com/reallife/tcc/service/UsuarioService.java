@@ -1,61 +1,99 @@
 package com.reallife.tcc.service;
 
 import com.reallife.tcc.entity.Usuario;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import com.reallife.tcc.repository.UsuarioRepository;
 import com.reallife.tcc.security.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    // Registro padrão de usuário
-    public Usuario registrarUsuario(Usuario usuario) {
-        // Verifica se já existe usuário com o mesmo email
-        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("Usuário com esse email já existe");
-        }
-
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        usuario.setRole(Role.ROLE_ALUNO); // role padrão
-        usuario.setAtivo(true);
-        return usuarioRepository.save(usuario);
-    }
-
-    // Definir nova role
-    public Usuario definirRole(Long id, Role novoRole) {
-        Usuario usuario = buscarPorId(id);
-        usuario.setRole(novoRole);
-        return usuarioRepository.save(usuario);
-    }
-
-    // Listar todos os usuários
-    public List<Usuario> listarUsuarios() {
+    // LISTAR TODOS
+    public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
 
-    // Buscar usuário por ID
+    // BUSCAR POR ID
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
     }
 
-    // Autenticar usuário pelo email e senha
-    public Usuario autenticar(String email, String senha) {
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Email ou senha inválidos"));
+    // CRIAR
+    public Usuario criar(Usuario usuario) {
 
-        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
-            throw new RuntimeException("Email ou senha inválidos");
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("Email já está cadastrado!");
         }
 
-        return usuario;
+        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+            throw new RuntimeException("CPF já está cadastrado!");
+        }
+
+        return usuarioRepository.save(usuario);
+    }
+
+    // ATUALIZAR
+    public Usuario atualizar(Long id, Usuario dados) {
+        Usuario usuario = buscarPorId(id);
+
+        usuario.setNome(dados.getNome());
+        usuario.setEmail(dados.getEmail());
+        usuario.setSenha(dados.getSenha());
+        usuario.setCpf(dados.getCpf());
+
+        return usuarioRepository.save(usuario);
+    }
+
+    // ALTERAR SENHA
+    public void alterarSenha(Long id, String senhaAtual, String novaSenha) {
+        Usuario usuario = buscarPorId(id);
+
+        if (!usuario.getSenha().equals(senhaAtual)) {
+            throw new RuntimeException("Senha atual incorreta.");
+        }
+
+        usuario.setSenha(novaSenha);
+        usuarioRepository.save(usuario);
+    }
+
+    // ALTERAR ROLE
+    public Usuario DefinirRole(Long id, Role role) {
+        Usuario usuario = buscarPorId(id);
+
+        usuario.setRole(role);
+        return usuarioRepository.save(usuario);
+    }
+
+    // ATIVAR / DESATIVAR USUÁRIO
+    public Usuario alterarStatus(Long id, boolean ativo) {
+        Usuario usuario = buscarPorId(id);
+
+        usuario.setAtivo(ativo);
+        return usuarioRepository.save(usuario);
+    }
+
+    // DELETAR
+    public void deletar(Long id) {
+        Usuario usuario = buscarPorId(id);
+        usuarioRepository.delete(usuario);
+    }
+
+    // BUSCAR POR EMAIL
+    public Usuario buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email não encontrado."));
+    }
+
+    public Usuario definirRole(Long id, Role role) {
+        Usuario usuario = buscarPorId(id);
+        usuario.setRole(role);
+        return usuarioRepository.save(usuario);
     }
 }

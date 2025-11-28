@@ -1,9 +1,9 @@
 package com.reallife.tcc.service;
 
 import com.reallife.tcc.entity.Exercicio;
+import com.reallife.tcc.repository.ExercicioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.reallife.tcc.repository.ExercicioRepository;
 
 import java.util.List;
 
@@ -13,23 +13,21 @@ public class ExercicioService {
 
     private final ExercicioRepository exercicioRepository;
 
-    public Exercicio cadastrarExercicio(Exercicio exercicio) {
-        return exercicioRepository.save(exercicio);
-    }
-
     public List<Exercicio> listarExercicios() {
         return exercicioRepository.findAll();
     }
 
     public Exercicio buscarPorId(Long id) {
         return exercicioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Exercício não encontrado com id: " + id));
+                .orElseThrow(() -> new RuntimeException("Exercício não encontrado"));
     }
 
-    public void deletarExercicio(Long id) {
-        if (!exercicioRepository.existsById(id)) {
-            throw new RuntimeException("Exercício não encontrado para exclusão.");
-        }
+    // para admin opcional
+    public Exercicio salvar(Exercicio exercicio) {
+        return exercicioRepository.save(exercicio);
+    }
+
+    public void deletar(Long id) {
         exercicioRepository.deleteById(id);
     }
 }

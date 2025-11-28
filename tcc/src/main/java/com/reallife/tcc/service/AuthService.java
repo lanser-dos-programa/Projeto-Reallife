@@ -1,13 +1,12 @@
 package com.reallife.tcc.service;
 
+import com.reallife.tcc.dto.RegistroDto;
 import com.reallife.tcc.entity.Usuario;
+import com.reallife.tcc.repository.UsuarioRepository;
+import com.reallife.tcc.security.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.reallife.tcc.repository.UsuarioRepository;
-import com.reallife.tcc.security.JwtService;
 
 @Service
 @RequiredArgsConstructor
@@ -15,31 +14,34 @@ public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
 
-    public String registrar(Usuario usuario) {
-        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("E-mail já em uso!");
+    // LOGIN
+    public String login(String email, String senha) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
+            throw new RuntimeException("Senha incorreta");
         }
-        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
-            throw new RuntimeException("Cpf já em uso!");
-        }
 
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        usuarioRepository.save(usuario);
-
-        return jwtService.gerarToken(usuario);
+        return "Login realizado com sucesso!";
     }
 
-    public String login(String email, String senha) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, senha)
-        );
+    // REGISTRO
+    public void registrar(RegistroDto dto) {
+        if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("Email já cadastrado!");
+        }
 
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        Usuario usuario = Usuario.builder()
+                .nome(dto.getNome())
+                .email(dto.getEmail())
+                .senha(passwordEncoder.encode(dto.getSenha()))
+                .cpf(dto.getCpf())
+                .role(Role.valueOf(dto.getRole().toUpperCase()))
+                .ativo(true)
+                .build();
 
-        return jwtService.gerarToken(usuario);
+        usuarioRepository.save(usuario);
     }
 }

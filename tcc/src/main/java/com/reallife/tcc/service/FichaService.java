@@ -1,34 +1,40 @@
 package com.reallife.tcc.service;
 
+import com.reallife.tcc.dto.FichaDto;
+import com.reallife.tcc.entity.Aluno;
+import com.reallife.tcc.entity.Exercicio;
+import com.reallife.tcc.entity.FichaDeTreino;
+import com.reallife.tcc.repository.AlunoRepository;
+import com.reallife.tcc.repository.FichaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.reallife.tcc.entity.FichaDeTreino;
-import com.reallife.tcc.repository.FichaRepository;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FichaService {
+
     private final FichaRepository fichaRepository;
+    private final ExercicioService exercicioService;
+    private final AlunoRepository alunoRepository;
 
-    public FichaDeTreino cadastrarFicha(FichaDeTreino fichaDeTreino) {
-        return fichaRepository.save(fichaDeTreino);
-    }
+    public FichaDeTreino criarFicha(FichaDto dto) {
+        Aluno aluno = alunoRepository.findById(dto.getAlunoId())
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
 
-    public List<FichaDeTreino> listarFicha() {
-        return fichaRepository.findAll();
-    }
+        Set<Exercicio> exercicios = dto.getExerciciosIds()
+                .stream()
+                .map(exercicioService::buscarPorId)
+                .collect(Collectors.toSet());
 
-    public FichaDeTreino buscarPorId(Long id) {
-        return fichaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ficha não encontrada com o ID: " + id));
-    }
+        FichaDeTreino ficha = new FichaDeTreino();
+        ficha.setNome(dto.getNome());
+        ficha.setObjetivo(dto.getObjetivo());
+        ficha.setAluno(aluno);
+        ficha.setExercicios(exercicios);
 
-    public void deletarFicha(Long id) {
-        if (!fichaRepository.existsById(id)) {
-            throw new RuntimeException("Ficha não encontrada para exclusão.");
-        }
-        fichaRepository.deleteById(id);
+        return fichaRepository.save(ficha);
     }
 }

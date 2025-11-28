@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "exercicios") // tabela em minúscula
+@Table(name = "exercicios")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,13 +17,15 @@ public class Exercicio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private String nome;                 // Nome do exercício, ex: "Supino reto"
-    private String grupoMuscular;        // Ex: Peito, Costas, Pernas, Braços, Ombro, Abdômen
-    private String descricao;            // Breve descrição do exercício
+    private String nome;
 
-    // Relacionamento N:N com FichaDeTreino
+    private String grupoMuscular; // Peito, Costas, Pernas, Ombros...
+
+    @Column(length = 2000)
+    private String descricao;
+
     @ManyToMany(mappedBy = "exercicios")
     private Set<FichaDeTreino> fichas = new HashSet<>();
 }

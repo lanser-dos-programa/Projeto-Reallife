@@ -1,13 +1,15 @@
 package com.reallife.tcc.controller;
 
 import com.reallife.tcc.entity.Usuario;
+import com.reallife.tcc.security.Role;
+import com.reallife.tcc.service.AuthService;
+import com.reallife.tcc.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.reallife.tcc.service.UsuarioService;
-import com.reallife.tcc.security.Role;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -15,39 +17,98 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final AuthService authService;
 
-    //  Registrar usuário (qualquer um pode acessar)
-    @PostMapping("/registrar")
-    public ResponseEntity<Usuario> registrar(@RequestBody Usuario usuario) {
-        Usuario novo = usuarioService.registrarUsuario(usuario);
+
+    //  CADASTRAR USUÁRIO
+
+    @PostMapping
+    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
+        Usuario novo = usuarioService.criar(usuario);
         return ResponseEntity.ok(novo);
     }
 
-    //  Login usuário
+
+    //  LOGIN
+
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(@RequestBody Usuario usuario) {
-        Usuario autenticado = usuarioService.autenticar(usuario.getEmail(), usuario.getSenha());
-        return ResponseEntity.ok(autenticado);
+    public ResponseEntity<Map<String, String>> login(
+            @RequestParam String email,
+            @RequestParam String senha
+    ) {
+        String token = authService.login(email, senha);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
-    //  Buscar usuário por ID
+
+    //  LISTAR TODOS
+
+    @GetMapping
+    public ResponseEntity<List<Usuario>> listarTodos() {
+        return ResponseEntity.ok(usuarioService.listarTodos());
+    }
+
+
+    //  BUSCAR POR ID
+
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
-        Usuario usuario = usuarioService.buscarPorId(id);
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
     }
 
-    //  Listar todos os usuários (pode proteger depois)
-    @GetMapping("/")
-    public ResponseEntity<List<Usuario>> listarTodos() {
-        List<Usuario> usuarios = usuarioService.listarUsuarios();
-        return ResponseEntity.ok(usuarios);
-    }
 
-    //  Alterar role do usuário (ex: só admin pode usar)
-    @PutMapping("/{id}/role")
-    public ResponseEntity<Usuario> alterarRole(@PathVariable Long id, @RequestParam Role role) {
-        Usuario atualizado = usuarioService.definirRole(id, role);
+    //  ATUALIZAR DADOS
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> atualizar(
+            @PathVariable Long id,
+            @RequestBody Usuario usuarioAtualizado
+    ) {
+        Usuario atualizado = usuarioService.atualizar(id, usuarioAtualizado);
         return ResponseEntity.ok(atualizado);
+    }
+
+    //  ALTERAR SENHA
+    @PutMapping("/{id}/senha")
+    public ResponseEntity<Void> alterarSenha(
+            @PathVariable Long id,
+            @RequestParam String senhaAtual,
+            @RequestParam String novaSenha
+    ) {
+        usuarioService.alterarSenha(id, senhaAtual, novaSenha);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    //  DEFINIR ROLE
+
+    @PutMapping("/{id}/role")
+    public ResponseEntity<Usuario> definirRole(
+            @PathVariable Long id,
+            @RequestParam Role role
+    ) {
+        Usuario atualizado = usuarioService.DefinirRole(id, role);
+        return ResponseEntity.ok(atualizado);
+    }
+
+
+    //  ATIVAR / DESATIVAR USUÁRIO
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Usuario> alterarStatus(
+            @PathVariable Long id,
+            @RequestParam boolean ativo
+    ) {
+        Usuario atualizado = usuarioService.alterarStatus(id, ativo);
+        return ResponseEntity.ok(atualizado);
+    }
+
+
+    //  DELETAR USUÁRIO
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        usuarioService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

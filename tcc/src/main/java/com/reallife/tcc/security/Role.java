@@ -4,5 +4,6 @@ public enum Role {
     ROLE_ALUNO,
     ROLE_PROFESSOR,
     ROLE_NUTRICIONISTA,
-    ROLE_ADMIN
+    ROLE_RECEPCAO,
+    ROLE_ADMIN,
 }
