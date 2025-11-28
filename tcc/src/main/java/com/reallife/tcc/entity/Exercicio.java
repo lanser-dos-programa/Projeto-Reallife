@@ -2,30 +2,29 @@ package com.reallife.tcc.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "exercicios")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Exercicio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
-    private String grupoMuscular; // Peito, Costas, Pernas, Ombros...
-
-    @Column(length = 2000)
+    private String grupoMuscular;
     private String descricao;
 
-    @ManyToMany(mappedBy = "exercicios")
-    private Set<FichaDeTreino> fichas = new HashSet<>();
+    @Builder.Default
+    private Boolean ativo = true;
 }

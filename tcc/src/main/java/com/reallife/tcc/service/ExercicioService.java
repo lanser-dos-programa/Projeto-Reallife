@@ -22,7 +22,6 @@ public class ExercicioService {
                 .orElseThrow(() -> new RuntimeException("Exercício não encontrado"));
     }
 
-    // para admin opcional
     public Exercicio salvar(Exercicio exercicio) {
         return exercicioRepository.save(exercicio);
     }

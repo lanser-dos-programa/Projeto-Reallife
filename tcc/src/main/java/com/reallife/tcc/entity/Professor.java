@@ -2,7 +2,9 @@ package com.reallife.tcc.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Set;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "professores")
@@ -17,27 +19,26 @@ public class Professor {
     private Long id;
 
     private String formacao;
-
-    @Column(name = "registro_profissional")
-    private String registroProfissional; // CREF
-
+    private String registroProfissional;
     private String especialidade;
     private String telefone;
     private Integer anosExperiencia;
 
     @Builder.Default
-    private boolean ativo = true;
+    private Boolean ativo = true;
 
-    // RELACIONAMENTO COM USUARIO
-    @OneToOne
-    @JoinColumn(name = "usuario_id", unique = true, nullable = false)
+    // Relacionamento com Usuário
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    // FICHAS DE TREINO CRIADAS PELO PROFESSOR
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
-    private Set<FichaDeTreino> fichasCriadas;
+    // Relacionamento com Alunos
+    @OneToMany(mappedBy = "professor", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Aluno> alunos = new ArrayList<>();
 
-    // ALUNOS ORIENTADOS PELO PROFESSOR
-    @OneToMany(mappedBy = "professor")
-    private Set<Aluno> alunos;
+    // Relacionamento com Fichas (CORREÇÃO: mappedBy deve apontar para "professor" na FichaDeTreino)
+    @OneToMany(mappedBy = "professor", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<FichaDeTreino> fichasCriadas = new ArrayList<>();
 }

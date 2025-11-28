@@ -30,7 +30,6 @@ public class ProfessorService {
                 .especialidade(professor.getEspecialidade())
                 .telefone(professor.getTelefone())
                 .anosExperiencia(professor.getAnosExperiencia())
-                .ativo(professor.isAtivo())
                 .nome(professor.getUsuario().getNome())
                 .email(professor.getUsuario().getEmail())
                 .cpf(professor.getUsuario().getCpf())
