@@ -9,6 +9,8 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { DietaComponent } from './modules/dieta/dieta.component';
 import { NutricionistaComponent } from './modules/nutricionista/nutricionista.component';
 import { TreinoprofComponent } from './modules/treinoprof/treinoprof.component';
+import { EscolherAlunoComponent } from './modules/escolher-aluno/escolher-aluno.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,8 +26,9 @@ export const routes: Routes = [
       { path: 'treino', component: TreinoComponent },
       { path: 'dashboard', component: DashboardComponent },
       {path: 'dieta', component: DietaComponent},
-      {path: 'nutricionista', component: NutricionistaComponent},
-      {path: 'treinoprof', component: TreinoprofComponent}
+      {path: 'nutricionista/:id/:nome', component: NutricionistaComponent},
+      {path: 'treinoprof', component: TreinoprofComponent},
+      {path: 'escolher-aluno', component: EscolherAlunoComponent}
     ]
   }
 ];
