@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router'; // ✅ Import necessário para navegação
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,28 +12,85 @@ import { Router } from '@angular/router'; // ✅ Import necessário para navega�
 })
 export class LoginComponent {
   form: FormGroup;
+  loading = false;
 
-  constructor(private fb: FormBuilder, private router: Router) { // ✅ injeta o Router
+  constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
       senha: ['', Validators.required]
     });
   }
 
+  // -------------------------------------
+  // 🔥 SUBMIT DO LOGIN
+  // -------------------------------------
   onSubmit() {
-    if (this.form.valid) {
-      const { email, senha } = this.form.value;
-      console.log('Tentando login:', email, senha);
-
-      //  Aqui futuramente  vai validar o login com o backend
-      // Se o login for bem-sucedido:
-      this.router.navigate(['/home']); // redireciona para a página Home
-    } else {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
     }
+
+    this.loading = true;
+
+    const { email, senha } = this.form.value;
+
+    fetch("http://localhost:8080/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, senha })
+    })
+      .then(async res => {
+        if (!res.ok) throw new Error("Credenciais inválidas");
+        return await res.json();
+      })
+      .then(usuario => {
+
+        // Garantia de retorno correto
+        if (!usuario || !usuario.tipo) {
+          alert("Usuário ou senha inválidos");
+          return;
+        }
+
+        console.log("Usuário logado:", usuario);
+
+        // -------------------------------
+        // 🔥 REDIRECIONAMENTO POR FUNÇÃO
+        // -------------------------------
+        switch (usuario.tipo.toUpperCase()) {
+
+          case "PROFESSOR":
+            this.router.navigate(["/dashboard"]);
+            break;
+
+          case "ALUNO":
+            this.router.navigate(["/home"], {
+              queryParams: { id: usuario.id, nome: usuario.nome }
+            });
+            break;
+
+          case "NUTRICIONISTA":
+            this.router.navigate(["/escolher-aluno"], {
+              queryParams: { id: usuario.id, nome: usuario.nome }
+            });
+            break;
+
+          default:
+            alert("Tipo de usuário desconhecido");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Erro ao conectar ao servidor");
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
+  // -------------------------------------
+  //  LOGIN COM GOOGLE (placeholder)
+  // -------------------------------------
   loginGoogle() {
-    console.log('Login com Google ainda não implementado');
+    alert("Login com Google ainda não implementado");
   }
 }
