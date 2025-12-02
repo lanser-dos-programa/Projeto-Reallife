@@ -1,24 +1,25 @@
 <div class="login-container">
-  <h2 class="login-title">LOGIN</h2> 
+
+  <!-- COLUNA DO FORMULÁRIO -->
   <div class="login-box">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2 class="login-title">LOGIN</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-area">
       <input type="email" placeholder="E-MAIL/CPF" formControlName="email" />
       <input type="password" placeholder="SENHA" formControlName="senha" />
 
       <button type="submit" class="btn-primary">CONFIRMAR</button>
     </form>
 
-    <button class="btn-google" (click)="loginGoogle()">
-      <img src="../../../assets/google.png" alt="Google Logo" style="width: 20px; height: 20px;" />
-      CONTINUAR COM O GOOGLE 
-    </button>
+   
   </div>
 
+  <!-- COLUNA DA IMAGEM -->
   <div class="login-image">
     <div class="overlay">
       <h1 class="logo">REALLIFE</h1>
-      
       <img src="../../../assets/logo2.png" alt="Logo" class="logo2" />
     </div>
   </div>
+
 </div>
