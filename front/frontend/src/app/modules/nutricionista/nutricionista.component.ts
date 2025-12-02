@@ -1,6 +1,7 @@
 import { Component, Renderer2, OnDestroy, OnInit, Inject } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     standalone: true,  
@@ -12,7 +13,8 @@ import { FormsModule } from '@angular/forms';
 
 export class NutricionistaComponent implements OnInit, OnDestroy {
     
-    
+id!: number;
+nome!: string;
     
     dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];  
     diaSelecionado: string = '';
@@ -42,8 +44,8 @@ alimentos = [
   totalDoDia: number = 0;
   
   
-  constructor(private renderer: Renderer2) {
-  this.dias.forEach(dia => {
+  constructor(private renderer: Renderer2, private route: ActivatedRoute,) {
+    this.dias.forEach(dia => {
     this.dieta[dia] = {};
 
     this.refeicoes.forEach(ref => {
@@ -54,6 +56,8 @@ alimentos = [
 
 ngOnInit() {
   this.renderer.addClass(document.body, 'scroll-liberado');
+  this.id = Number(this.route.snapshot.paramMap.get('id'));
+  this.nome = decodeURIComponent(this.route.snapshot.paramMap.get('nome') || '');
 }
 
 ngOnDestroy() {

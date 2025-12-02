@@ -1,0 +1,10 @@
+<div class="container">
+  <h2>Escolher Aluno</h2>
+
+  <div class="lista-alunos">
+    <button class="botao-aluno" *ngFor="let aluno of alunos"
+            (click)="selecionarAluno(aluno.id, aluno.nome)">
+      {{ aluno.nome }}
+    </button>
+  </div>
+</div>

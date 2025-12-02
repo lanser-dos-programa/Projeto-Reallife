@@ -1,0 +1,40 @@
+* {
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+.container {
+  padding: 40px;
+  background-color: #0d0d0d;
+  min-height: 100vh;
+}
+
+h2 {
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.lista-alunos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 280px;
+}
+
+.botao-aluno {
+  background-color: #d64017;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.botao-aluno:hover {
+  background-color: #ff5a24;
+  transform: translateX(4px);
+}
