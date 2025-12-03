@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '/api' // no build prod, se servir pelo Spring Boot, também '/api'
+  apiUrl: 'http://localhost:8080' // no build prod, se servir pelo Spring Boot, também '/api'
 };
