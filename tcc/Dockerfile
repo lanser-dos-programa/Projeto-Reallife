@@ -1,22 +1,20 @@
-# --- STAGE 1: BUILD ---
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# --- ESTÁGIO 1: BUILD (Maven) ---
+FROM maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
 
+# Copia arquivos do contexto de build (pasta tcc)
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
 COPY src ./src
 
+# Executa o build, OBRIGANDO O SKIP DOS TESTES:
 RUN mvn clean package -DskipTests
 
-
-# --- STAGE 2: RUNTIME ---
-FROM eclipse-temurin:17-jdk
-
+# --- ESTÁGIO 2: EXECUÇÃO (Runtime) ---
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+# Copia o JAR do estágio de build
+COPY --from=build /app/target/tcc-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
-
-ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
+ENTRYPOINT ["java","-jar","app.jar"]
