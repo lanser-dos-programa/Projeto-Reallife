@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.6</version> <!-- mantém sua versão -->
+		<version>3.5.6</version>
 		<relativePath/>
 	</parent>
 
@@ -25,7 +25,7 @@
 
 	<dependencies>
 
-		<!-- 🔹 Spring Boot -->
+		<!-- 🔹 Spring Boot Base -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -53,7 +53,7 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- 🔹 Banco de dados -->
+		<!-- 🔹 Banco de Dados -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -80,11 +80,9 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- ⭐ ADICIONADOS (SEM ALTERAR SEU CÓDIGO) ⭐ -->
 
-
-		<!--  ⭐ ADICIONADOS (SEM ALTERAR NADA DO SEU CÓDIGO) ⭐ -->
-
-		<!-- ModelMapper (DTO/Entity converter) -->
+		<!-- ModelMapper -->
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
@@ -117,8 +115,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-
-		<!-- DevTools (opcional) -->
+		<!-- DevTools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -128,10 +125,11 @@
 
 	</dependencies>
 
+	<!-- 🔹 Aqui começa a parte que estava te causando erro -->
 	<build>
 		<plugins>
 
-			<!-- 🔹 Plugin do compilador -->
+			<!-- Plugin do compilador -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -147,10 +145,17 @@
 				</configuration>
 			</plugin>
 
-			<!-- 🔹 Plugin do Spring Boot -->
+			<!-- Plugin do Spring Boot (CORRIGIDO) -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<excludes>
 						<exclude>
