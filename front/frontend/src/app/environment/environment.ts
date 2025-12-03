@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: '/api'  // usa proxy em dev
+  apiUrl: 'http://localhost:8080'  // usa proxy em dev
 };

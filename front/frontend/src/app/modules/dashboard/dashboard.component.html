@@ -1,182 +1,178 @@
 <div class="dashboard-container">
-  
-
   <main class="content">
-   <section class="calendar-section card">
-  <div class="calendar-header">
-    <button (click)="prevMonth()">&#9664;</button>
-    <h2>{{ monthName }} {{ currentYear }}</h2>
-    <button (click)="nextMonth()">&#9654;</button>
-  </div>
 
- <table class="calendar">
-  <thead>
-    <tr>
-      <th>Dom</th>
-      <th>Seg</th>
-      <th>Ter</th>
-      <th>Qua</th>
-      <th>Qui</th>
-      <th>Sex</th>
-      <th>Sáb</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let week of weeks">
-      <td *ngFor="let day of week" [class.today]="isToday(day)">
-        <span *ngIf="day !== 0">{{ day }}</span>
-      </td>
-    </tr>
-  </tbody>
-</table>
-</section>
+    <!-- ===================== -->
+    <!-- CALENDÁRIO -->
+    <!-- ===================== -->
+    <section class="calendar-section card">
+      <div class="calendar-header">
+        <button (click)="prevMonth()">&#9664;</button>
+        <h2>{{ monthName }} {{ currentYear }}</h2>
+        <button (click)="nextMonth()">&#9654;</button>
+      </div>
 
-  <!-- Alunos-->
+      <table class="calendar">
+        <thead>
+          <tr>
+            <th>Dom</th>
+            <th>Seg</th>
+            <th>Ter</th>
+            <th>Qua</th>
+            <th>Qui</th>
+            <th>Sex</th>
+            <th>Sáb</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let week of weeks">
+            <td *ngFor="let day of week" [class.today]="isToday(day)">
+              <span *ngIf="day !== 0">{{ day }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ===================== -->
+    <!-- ALUNOS PRINCIPAIS -->
+    <!-- ===================== -->
     <section class="students-section card">
       <div class="section-header">
         <h2>Lista de alunos</h2>
-        <a href="#" (click)="abrirPopupAlunos($event)" >Ver tudo</a>
+        <a href="#" (click)="abrirPopupAlunos($event)">Ver tudo</a>
       </div>
+
       <ul class="students-list">
         <li *ngFor="let aluno of alunosDetalhados">
           <span class="icon">👤</span>
           <span>{{ aluno.nome }}</span>
-          <button class="edit-btn" (click)="abrirPopupAluno(aluno)" >Editar</button>
+          <button class="edit-btn" (click)="abrirPopupAluno(aluno)">Editar</button>
         </li>
       </ul>
     </section>
 
+    <!-- ===================== -->
+    <!-- POPUP LISTA COMPLETA -->
+    <!-- ===================== -->
     <div class="popup-overlay" *ngIf="mostrarPopupAlunos">
-  <div class="popup-content">
-    <button class="close-btn" (click)="fecharPopupAlunos()">×</button>
-    <h2>Lista de alunos</h2>
+      <div class="popup-content">
+        <button class="close-btn" (click)="fecharPopupAlunos()">×</button>
+        <h2>Lista de alunos</h2>
 
-    <table class="popup-table">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Peso</th>
-          <th>Altura</th>
-          <th>Nascimento</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let aluno of alunosDetalhados">
-          <td>
-            <span class="icon">👤</span>
-            {{ aluno.nome }}
-          </td>
-          <td>{{ aluno.peso }}</td>
-          <td>{{ aluno.altura }}</td>
-          <td>{{ aluno.nascimento }}</td>
-          <td>
-            <button class="editar-btn"  (click)="abrirPopupAluno(aluno)" >Editar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="popup-overlay" *ngIf="mostrarPopupAluno">
-  <div class="edit-student-popup">
-    <button class="close-btn" (click)="fecharPopupAluno()">×</button>
-
-    <img [src]="alunoSelecionadoDetalhado?.foto || 'assets/default-avatar.png'" alt="Foto do aluno" class="aluno-foto" />
-    <h3>{{ alunoSelecionadoDetalhado?.nome }}</h3>
-
-    <div class="info-grid">
-      <div class="label">Nome completo</div>
-      <div class="value">{{ alunoSelecionadoDetalhado?.nome }}</div>
-
-      <div class="label">Peso</div>
-      <div class="value">{{ alunoSelecionadoDetalhado?.peso }}</div>
-
-      <div class="label">Altura</div>
-      <div class="value">{{ alunoSelecionadoDetalhado?.altura }}</div>
-
-      <div class="label">Data de nascimento</div>
-      <div class="value">{{ alunoSelecionadoDetalhado?.nascimento }}</div>
-
-      <div class="label">Idade</div>
-      <div class="value">{{ alunoSelecionadoDetalhado?.idade }}</div>
-
-      <div class="label">Objetivo</div>
-      <div class="value">{{ alunoSelecionadoDetalhado?.objetivo }}</div>
+        <table class="popup-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Peso</th>
+              <th>Altura</th>
+              <th>Nascimento</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let aluno of alunosDetalhados">
+              <td>
+                <span class="icon">👤</span>
+                {{ aluno.nome }}
+              </td>
+              <td>{{ aluno.peso }}</td>
+              <td>{{ aluno.altura }}</td>
+              <td>{{ aluno.nascimento }}</td>
+              <td>
+                <button class="editar-btn" (click)="abrirPopupAluno(aluno)">Editar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="popup-actions">
-    <button class="btn-treino" (click)="abrirTreinoAluno(alunoSelecionadoDetalhado)">Treino</button>
-    <button class="btn-salvar" (click)="salvarAluno()">Salvar</button>
+    <!-- ===================== -->
+    <!-- POPUP EDITAR ALUNO -->
+    <!-- ===================== -->
+    <div class="popup-overlay" *ngIf="mostrarPopupAluno">
+      <div class="edit-student-popup">
+        <button class="close-btn" (click)="fecharPopupAluno()">×</button>
+
+        <img [src]="alunoSelecionadoDetalhado?.foto || 'assets/default-avatar.png'" 
+             alt="Foto do aluno" class="aluno-foto" />
+
+        <h3>{{ alunoSelecionadoDetalhado?.nome }}</h3>
+
+        <div class="info-grid">
+          <div class="label">Nome completo</div>
+          <div class="value">{{ alunoSelecionadoDetalhado?.nome }}</div>
+
+          <div class="label">Peso</div>
+          <div class="value">{{ alunoSelecionadoDetalhado?.peso }}</div>
+
+          <div class="label">Altura</div>
+          <div class="value">{{ alunoSelecionadoDetalhado?.altura }}</div>
+
+          <div class="label">Data de nascimento</div>
+          <div class="value">{{ alunoSelecionadoDetalhado?.nascimento }}</div>
+
+          <div class="label">Idade</div>
+          <div class="value">{{ alunoSelecionadoDetalhado?.idade }}</div>
+
+          <div class="label">Objetivo</div>
+          <div class="value">{{ alunoSelecionadoDetalhado?.objetivo }}</div>
+        </div>
+
+        <div class="popup-actions">
+          <button class="btn-treino" (click)="abrirTreinoAluno(alunoSelecionadoDetalhado.id)">
+            Treino
+          </button>
+          <button class="btn-salvar" (click)="salvarAluno()">Salvar</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-
-<!-- Aulas-->
-
+    <!-- ===================== -->
+    <!-- AULAS (CARREGA DO TS) -->
+    <!-- ===================== -->
     <section class="classes-section card">
       <div class="section-header">
         <h2>Aulas</h2>
-        <a href="#" (click)="abrirPopup($event)" >Ver tudo</a>
+        <a href="#" (click)="abrirPopup($event)">Ver tudo</a>
       </div>
+
       <div class="classes-grid">
-        <div class="class-card" *ngFor="let cat of categoriasTreino">
-          <img [src]="cat.imagem" [alt]="cat.nome" />
-          <span>{{ cat.nome }}</span>
+        <div class="class-card" *ngFor="let aula of aulas" (click)="abrirPopupEditar(aula)">
+          <img [src]="aula.img" [alt]="aula.nome" />
+          <span>{{ aula.nome }}</span>
         </div>
       </div>
     </section>
-    <div class="popup-overlay" *ngIf="mostrarPopup">
-  <div class="popup-content">
-    <button class="close-btn" (click)="fecharPopup()">×</button>
-    <h2>Categorias de Treino</h2>
 
-    <table class="popup-table">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Horários</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cat of categoriasTreino">
-          <td>{{ cat.nome }}</td>
-          <td>{{ cat.horario }}</td>
-          <td><button class="editar-btn" (click)="abrirPopupEditar(cat)" >Editar</button></td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- ===================== -->
+    <!-- POPUP EDITAR AULA -->
+    <!-- ===================== -->
+    <div class="popup-overlay" *ngIf="mostrarPopupEditarAula">
+      <div class="edit-class-popup">
+        <button class="close-btn" (click)="fecharPopupEditar()">×</button>
 
-<div class="popup-overlay" *ngIf="mostrarPopupEditarAula">
-  <div class="edit-class-popup">
-    <button class="close-btn" (click)="fecharPopupEditar()">×</button>
+        <img [src]="aulaSelecionada?.img" alt="Imagem da Aula">
 
-    <img [src]="aulaSelecionada?.imagem" alt="Imagem da Aula">
-    <h3>{{ aulaSelecionada?.nome }}</h3>
+        <h3>{{ aulaSelecionada?.nome }}</h3>
 
-    <div class="info">
-      <label>Professor:</label>
-      <p>{{ aulaSelecionada?.professor }}</p>
+        <div class="info">
+          <label>Professor:</label>
+          <p>{{ aulaSelecionada?.professor || 'Não informado' }}</p>
 
-      <label>Horário:</label>
-      <p>{{ aulaSelecionada?.horario }}</p>
+          <label>Horário:</label>
+          <p>{{ aulaSelecionada?.horario || 'Não informado' }}</p>
 
-      <label>Descrição:</label>
-      <p>{{ aulaSelecionada?.descricao }}</p>
+          <label>Descrição:</label>
+          <p>{{ aulaSelecionada?.descricao || 'Sem descrição' }}</p>
+        </div>
+
+        <div class="botoes">
+          <button class="alunos-btn">Alunos</button>
+          <button class="salvar-btn">Salvar</button>
+        </div>
+      </div>
     </div>
-
-    <div class="botoes">
-      <button class="alunos-btn">Alunos</button>
-      <button class="salvar-btn">Salvar</button>
-    </div>
-  </div>
-</div>
-
-  </div>
-</div>
 
   </main>
 </div>

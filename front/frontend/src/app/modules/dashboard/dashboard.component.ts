@@ -1,35 +1,90 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { AlunoService } from '../../services/aluno.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+
+  // ============================
+  // CALENDÁRIO
+  // ============================
   currentMonth: number;
   currentYear: number;
   weeks: number[][] = [];
   monthName: string = '';
 
+  // ============================
+  // AULAS (fixas por enquanto)
+  // ============================
   aulas = [
     { nome: 'Luta', img: 'assets/luta.jpg' },
     { nome: 'Personal', img: 'assets/personal.jpg' },
     { nome: 'Funcional', img: 'assets/funcional.jpg' }
   ];
 
-  constructor(private renderer: Renderer2, private router: Router) {
+  // ============================
+  // POPUPS
+  // ============================
+  mostrarPopup: boolean = false;
+  mostrarPopupAlunos: boolean = false;
+  mostrarPopupEditarAula: boolean = false;
+  mostrarPopupAluno: boolean = false;
+
+  aulaSelecionada: any = null;
+  alunoSelecionadoDetalhado: any = null;
+
+  // ============================
+  // DADOS VINDOS DO BACKEND
+  // ============================
+  alunosDetalhados: any[] = [];
+
+  // ============================
+  // CONSTRUTOR
+  // ============================
+  constructor(
+    private renderer: Renderer2,
+    private router: Router,
+    private alunoService: AlunoService
+  ) {
     const today = new Date();
     this.currentMonth = today.getMonth();
     this.currentYear = today.getFullYear();
   }
 
+  // ============================
+  // ONINIT
+  // ============================
   ngOnInit(): void {
     this.generateCalendar(this.currentMonth, this.currentYear);
+    this.carregarAlunos();
   }
 
+  // ============================
+  // BUSCAR ALUNOS DO BACKEND
+  // ============================
+  carregarAlunos(): void {
+    this.alunoService.getAlunos().subscribe({
+      next: (dados) => {
+        this.alunosDetalhados = dados;
+        console.log("Alunos carregados do backend:", dados);
+      },
+      error: (erro) => {
+        console.error("Erro ao carregar alunos:", erro);
+      }
+    });
+  }
+
+  // ============================
+  // CALENDÁRIO
+  // ============================
   generateCalendar(month: number, year: number): void {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
@@ -39,12 +94,10 @@ export class DashboardComponent implements OnInit {
     const weeks: number[][] = [];
     let week: number[] = [];
 
-    // Preenche espaços antes do primeiro dia
     for (let i = 0; i < startDay; i++) {
       week.push(0);
     }
 
-    // Preenche dias do mês
     for (let day = 1; day <= daysInMonth; day++) {
       week.push(day);
       if (week.length === 7) {
@@ -53,7 +106,6 @@ export class DashboardComponent implements OnInit {
       }
     }
 
-    // Completa última semana
     if (week.length > 0) {
       while (week.length < 7) {
         week.push(0);
@@ -63,9 +115,6 @@ export class DashboardComponent implements OnInit {
 
     this.weeks = weeks;
     this.monthName = this.getMonthName(month);
-
-console.log('Calendário gerado:', this.weeks);
-
   }
 
   getMonthName(month: number): string {
@@ -106,97 +155,58 @@ console.log('Calendário gerado:', this.weeks);
     );
   }
 
-  mostrarPopup: boolean = false;
-
-categoriasTreino = [
-  {
-    nome: 'Muay Thai',
-    professor: 'Gabriel Barbosa',
-    horario: 'Quarta-feira - 19:00',
-    descricao: 'No Muay Thai, não é apenas sobre lutar, mas sobre se reinventar a cada treino. O foco vai além da técnica — é no seu crescimento pessoal.',
-    imagem: 'assets/muay-thai.webp'
-  },
-  {
-    nome: 'Jiu-Jitsu',
-    professor: 'Bruno Ferreira',
-    horario: 'Segunda e Sexta - 18:30',
-    descricao: 'O Jiu-Jitsu é mais do que um esporte — é disciplina, técnica e respeito. Aqui, você aprende a vencer seus próprios limites.',
-    imagem: 'assets/jiu-jitsu.jpg'
-  },
-  {
-    nome: 'Boxe',
-    professor: 'Carlos Mendes',
-    horario: 'Terça e Quinta - 20:00',
-    descricao: 'Com o boxe, você desenvolve foco, força e agilidade. Um treino completo que trabalha corpo e mente.',
-    imagem: 'assets/boxe.jpg'
+  
+  // ============================
+  // POPUPS
+  // ============================
+  abrirPopup(event: Event): void {
+    event.preventDefault();
+    this.mostrarPopup = true;
   }
-];
 
-abrirPopup(event: Event): void {
-  event.preventDefault();
-  this.mostrarPopup = true;
-}
+  fecharPopup(): void {
+    this.mostrarPopup = false;
+  }
 
-fecharPopup(): void {
-  this.mostrarPopup = false;
-}
+  abrirPopupAlunos(event: Event): void {
+    event.preventDefault();
+    this.mostrarPopupAlunos = true;
+  }
 
-  mostrarPopupAlunos: boolean = false;
+  fecharPopupAlunos(): void {
+    this.mostrarPopupAlunos = false;
+  }
 
-alunosDetalhados = [
-  { nome: 'LUIZ DANIEL LANSER', peso: '1T', altura: '1,79m', nascimento: '22/02/1998' },
-  { nome: 'PABLO HENRIQUE DE ANDRADE', peso: '45kg', altura: '1,90m', nascimento: '20/10/1945' },
-  { nome: 'BRUNO VALCANAIA', peso: '-65kg', altura: '1,80m', nascimento: '14/02/2000' },
-  { nome: 'CAIO FELIPE', peso: '-45kg', altura: '1m', nascimento: '23/07/6000' },
-  { nome: 'VITOR HUGO', peso: '60kg', altura: '1,77m', nascimento: '24/10/1929' }
-];
+  abrirPopupEditar(aula: any): void {
+    this.aulaSelecionada = aula;
+    this.mostrarPopupEditarAula = true;
+  }
 
-abrirPopupAlunos(event: Event): void {
-  event.preventDefault();
-  this.mostrarPopupAlunos = true;
-}
+  fecharPopupEditar(): void {
+    this.aulaSelecionada = null;
+    this.mostrarPopupEditarAula = false;
+  }
 
-fecharPopupAlunos(): void {
-  this.mostrarPopupAlunos = false;
-}
+  abrirPopupAluno(aluno: any): void {
+    this.alunoSelecionadoDetalhado = aluno;
+    this.mostrarPopupAluno = true;
+  }
 
-mostrarPopupEditarAula: boolean = false;
-aulaSelecionada: any = null;
+  fecharPopupAluno(): void {
+    this.alunoSelecionadoDetalhado = null;
+    this.mostrarPopupAluno = false;
+  }
 
-abrirPopupEditar(aula: any): void {
-  this.aulaSelecionada = aula;
-  this.mostrarPopupEditarAula = true;
-}
+  // ============================
+  // NAVEGAÇÃO
+  // ============================
+  abrirTreinoAluno(idAluno: number): void {
+    this.router.navigate(['/treinoprof', idAluno]);
+  }
 
-fecharPopupEditar(): void {
-  this.mostrarPopupEditarAula = false;
-  this.aulaSelecionada = null;
-}
-
-mostrarPopupAluno: boolean = false;
-alunoSelecionadoDetalhado: any = null;
-
-abrirPopupAluno(aluno: any): void {
-
-  this.alunoSelecionadoDetalhado = aluno;
-  this.mostrarPopupAluno = true;
-}
-
-fecharPopupAluno(): void {
-  this.mostrarPopupAluno = false;
-  this.alunoSelecionadoDetalhado = null;
-}
-
-
-abrirTreinoAluno(idAluno: number) {
-  this.router.navigate(['/treinoprof', idAluno]);
-
-  // Aqui você pode abrir outro popup de treino se quiser
-}
-
-salvarAluno(): void {
-  console.log('Salvar dados do aluno');
-  // Aqui você pode adicionar lógica de salvar depois
-}
+  // Placeholder
+  salvarAluno(): void {
+    console.log('Salvar dados do aluno');
+  }
 
 }
