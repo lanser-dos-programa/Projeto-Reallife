@@ -27,7 +27,7 @@
         <h4>{{ ref.nome }}</h4>
 
         <!-- LISTA DE ALIMENTOS DA REFEIÇÃO -->
-        <div *ngFor="let item of dieta[diaSelecionado][ref.id]; let i = index" class="food-row">
+        <div *ngFor="let item of dieta[diaSelecionado]?.[ref.id]; let i = index" class="food-row">
 
           <!-- SELECT DO ALIMENTO -->
        <div class="autocomplete-container">
@@ -61,6 +61,10 @@
         />
 
         <span>{{ item.kcal }} kcal</span>
+        <div class="medida-info" *ngIf="item.medida">
+  <small>Medida: {{ item.medida }}</small>
+</div>
+
         <button class="remove" (click)="removerAlimento(ref.id, i)">X</button>
 
 

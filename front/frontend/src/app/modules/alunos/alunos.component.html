@@ -11,27 +11,27 @@
           <option *ngFor="let aula of aulas" [ngValue]="aula.nome">{{ aula.nome }}</option>
         </select>
       </div>
-      <p>{{ aulaSelecionada.descricao }}</p>
+      <p>{{ aulaSelecionada?.descricao }}</p>
       <button class="cta-button" (click)="abrirPopup()">VER HORÁRIOS</button>
 
       <div class="instructor-profile">
-        <img [src]="aulaSelecionada.foto" alt="Foto do Sensei">
-        <blockquote>{{ aulaSelecionada.professor }}</blockquote>
+        <img [src]="aulaSelecionada?.foto" alt="Foto do Sensei">
+        <blockquote>{{ aulaSelecionada?.professor }}</blockquote>
       </div>
     </section>
 
     <section class="image-grid">
-      <img [src]="aulaSelecionada.imagens[0]" alt="Imagem principal" class="img-main">
-      <img [src]="aulaSelecionada.imagens[1]" alt="Imagem 2" class="img-top-right">
-      <img [src]="aulaSelecionada.imagens[2]" alt="Imagem 3" class="img-bottom-right">
+      <img [src]="aulaSelecionada.imagens?.[0]" alt="Imagem principal" class="img-main">
+      <img [src]="aulaSelecionada.imagens?.[1]" alt="Imagem 2" class="img-top-right">
+      <img [src]="aulaSelecionada.imagens?.[2]" alt="Imagem 3" class="img-bottom-right">
     </section>
   </main>
 
   <div class="modal-overlay" *ngIf="mostrarPopup" (click)="fecharPopup()">
     <div class="modal" (click)="$event.stopPropagation()">
-      <h3>Horários de {{ aulaSelecionada.nome }}</h3>
+      <h3>Horários de {{ aulaSelecionada?.nome }}</h3>
       <ul>
-        <li *ngFor="let h of aulaSelecionada.horarios">
+        <li *ngFor="let h of aulaSelecionada?.horarios">
           <strong>{{ h.dia }}:</strong> {{ h.hora }}
         </li>
       </ul>
