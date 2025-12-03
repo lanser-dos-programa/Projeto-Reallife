@@ -1,20 +1,24 @@
-# --- ESTÁGIO 1: BUILD (Maven) ---
+# --- ESTÁGIO 1: BUILD (Maven Robusto) ---
 FROM maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copia o pom.xml e o código-fonte (src) da raiz do contexto (sua pasta tcc) para /app
+# 1. Copia o pom.xml e o código-fonte (src)
+# Mantemos o COPY simples e correto, pois o problema de pathing deve estar resolvido
 COPY pom.xml .
 COPY src ./src
 
-# Executa o build do Maven. Ele criará o JAR executável em /app/target/
-RUN mvn clean package -DskipTests
+# 2. Executa o build com ajustes de memória e log detalhado:
+# -e: Exibe logs de erro detalhados.
+# -X: Exibe logs de debug completos (muito importante se falhar novamente).
+# MAVEN_OPTS: Aumenta a memória Heap do Maven (solução comum para builds grandes).
+ENV MAVEN_OPTS="-Xmx1024m"
+RUN mvn clean package -DskipTests -e -X
 
 # --- ESTÁGIO 2: EXECUÇÃO (Runtime) ---
-# Usamos apenas o JRE (ambiente de execução Java) para uma imagem final menor e mais segura
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
-# Copia o JAR executável (com o nome exato do pom.xml) do estágio de build para o estágio de execução
+# 3. Copia o JAR executável (com o nome exato)
 COPY --from=build /app/target/tcc-0.0.1-SNAPSHOT.jar app.jar
 
 # Expõe a porta padrão do Spring Boot
