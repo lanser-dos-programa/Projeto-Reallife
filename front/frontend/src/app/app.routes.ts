@@ -10,12 +10,13 @@ import { DietaComponent } from './modules/dieta/dieta.component';
 import { NutricionistaComponent } from './modules/nutricionista/nutricionista.component';
 import { TreinoprofComponent } from './modules/treinoprof/treinoprof.component';
 import { EscolherAlunoComponent } from './modules/escolher-aluno/escolher-aluno.component';
-
+import { AdminComponent } from './modules/admin/admin.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-
+  {path: 'admin', component: AdminComponent},
+  
   {
     path: '',
     component: LayoutComponent,
