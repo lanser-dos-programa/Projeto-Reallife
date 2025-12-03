@@ -157,6 +157,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<mainClass>com.reallife.tcc.ReallifeApplication</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
