@@ -2,6 +2,8 @@ import { Component, Renderer2, OnDestroy, OnInit, Inject } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { DietaService } from '../../services/dieta.service';
+
 
 @Component({
     standalone: true,  
@@ -17,7 +19,7 @@ id!: number;
 nome!: string;
     
     dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];  
-    diaSelecionado: string = '';
+    diaSelecionado: string = 'Segunda';
     
     refeicoes = [
         { id: 'cafe', nome: 'Café da manhã' },  
@@ -29,13 +31,7 @@ nome!: string;
     { id: 'jantar', nome: 'Jantar' },
 ];  
 
-alimentos = [
-    { nome: 'Arroz branco', kcalPorGrama: 1.3 },  
-    { nome: 'Frango grelhado', kcalPorGrama: 1.65 },
-    { nome: 'Banana', kcalPorUnidade: 89 },
-    { nome: 'Aveia', kcalPorGrama: 3.8 },
-    { nome: 'Ovo cozido', kcalPorUnidade: 78 },
-  ];  
+alimentos: any[] = [];  
 
   // Estrutura principal
   dieta: any = {};
@@ -44,7 +40,7 @@ alimentos = [
   totalDoDia: number = 0;
   
   
-  constructor(private renderer: Renderer2, private route: ActivatedRoute,) {
+  constructor(private renderer: Renderer2, private route: ActivatedRoute, private dietaService: DietaService,) {
     this.dias.forEach(dia => {
     this.dieta[dia] = {};
 
@@ -58,6 +54,14 @@ ngOnInit() {
   this.renderer.addClass(document.body, 'scroll-liberado');
   this.id = Number(this.route.snapshot.paramMap.get('id'));
   this.nome = decodeURIComponent(this.route.snapshot.paramMap.get('nome') || '');
+
+   this.dietaService.getAlimentos().subscribe({
+    next: (lista) => {
+      this.alimentos = lista;   // agora o HTML pega daqui
+    },
+    error: () => console.error('Erro ao carregar alimentos')
+  });
+
 }
 
 ngOnDestroy() {
@@ -85,47 +89,41 @@ selecionarDia(dia: string) {
   }  
 
 
-  atualizarCalorias() {
+atualizarCalorias() {
 
-    let totalDia = 0;  
-    this.totaisPorRefeicao = {};
+  let totalDia = 0;
+  this.totaisPorRefeicao = {};
 
-    for (let ref of this.refeicoes) {
+  for (let ref of this.refeicoes) {
 
-      let totalRefeicao = 0;  
+    let totalRefeicao = 0;
 
-      for (let item of this.dieta[this.diaSelecionado][ref.id]) {
+    for (let item of this.dieta[this.diaSelecionado][ref.id]) {
 
-        if (!item.alimento || !item.quantidade) {
-          item.kcal = 0;  
-          continue;
-        }  
+      if (!item.alimento || !item.quantidade) {
+        item.kcal = 0;
+        continue;
+      }
 
-      if (item.alimento && item.alimento.kcal) {
-        item.kcal = item.quantidade * item.alimento.kcal;  
-        }
+      // Agora o backend SEMPRE envia kcal por medida
+      item.kcal = item.quantidade * item.alimento.kcal;
 
-     if (item.alimento.kcalPorGrama) {
-          item.kcal = item.quantidade * item.alimento.kcalPorGrama;
-        } else if (item.alimento.kcalPorUnidade) {
-          item.kcal = item.quantidade * item.alimento.kcalPorUnidade;  
-        }  
+      totalRefeicao += item.kcal;
+    }
 
-        totalRefeicao += item.kcal;
-      }  
+    this.totaisPorRefeicao[ref.id] = totalRefeicao;
+    totalDia += totalRefeicao;
+  }
 
-      this.totaisPorRefeicao[ref.id] = totalRefeicao;
-      totalDia += totalRefeicao;
-    }  
-
-    this.totalDoDia = totalDia;
-  }  
+  this.totalDoDia = totalDia;
+}
 
   salvarDieta() {
-    console.log('Dieta enviada:', this.dieta[this.diaSelecionado]);  
-    alert('Dieta salva com sucesso!');
-  }  
-
+  this.dietaService.salvarDieta(this.id, this.dieta).subscribe({
+    next: () => alert('Dieta enviada ao aluno!'),
+    error: () => alert('Erro ao salvar dieta!')
+  });
+}
 
     filtrarAlimentos(item: any) {
   const termo = item.search?.toLowerCase() || '';      
@@ -135,10 +133,15 @@ selecionarDia(dia: string) {
 }  
 
 selecionarAlimento(item: any, alimento: any) {
-  item.alimento = alimento;  
-  item.search = alimento.nome; // coloca o nome no input
-  item.filtrados = []; // esconde sugestões
+  item.alimento = alimento;
+  item.search = alimento.nome;
+  item.filtrados = [];
+
+  // Salva a medida que veio do backend
+  item.medida = alimento.medida;
+
   this.atualizarCalorias();
-}  
+}
+
 
 }
