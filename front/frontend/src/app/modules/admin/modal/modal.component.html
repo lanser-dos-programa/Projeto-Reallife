@@ -1,0 +1,29 @@
+<div class="modal-bg" (click)="close()">
+</div>
+
+<div class="modal-box">
+
+  <h2>{{ titulo }}</h2>
+
+  <!-- FORMULÁRIO DINÂMICO -->
+  <form (ngSubmit)="submit()">
+
+    <div *ngIf="tipo !== 'deletar'">
+      <label>Nome:</label>
+      <input [(ngModel)]="form.nome" name="nome" required />
+
+      <label>Email:</label>
+      <input [(ngModel)]="form.email" name="email" required />
+    </div>
+
+    <div *ngIf="tipo === 'deletar'">
+      <label>ID do usuário:</label>
+      <input type="number" [(ngModel)]="form.id" name="id" required />
+    </div>
+
+    <button class="confirmar" type="submit">Confirmar</button>
+    <button class="cancelar" type="button" (click)="close()">Cancelar</button>
+
+  </form>
+
+</div>

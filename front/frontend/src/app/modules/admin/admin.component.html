@@ -1,0 +1,37 @@
+<div class="admin-container">
+
+  <!-- MENU LATERAL -->
+  <aside class="side-menu">
+    <h2 class="menu-title">Administração</h2>
+
+    <button (click)="abrirModal('aluno', 'Criar Aluno')" class="menu-btn">Criar Aluno</button>
+    <button (click)="abrirModal('professor', 'Criar Professor')" class="menu-btn">Criar Professor</button>
+    <button (click)="abrirModal('nutricionista', 'Criar Nutricionista')" class="menu-btn">Criar Nutricionista</button>
+    <button (click)="abrirModal('deletar', 'Deletar Usuário')" class="menu-btn delete">Deletar Usuário</button>
+  </aside>
+
+  <!-- LISTA -->
+  <main class="content-area">
+    <section class="recent-section">
+      <h2>Últimos usuários adicionados</h2>
+
+      <ul class="recent-list">
+        <li *ngFor="let user of ultimosUsuarios">
+          <strong>{{ user.nome }}</strong>
+          <span class="cargo">{{ user.tipo }}</span>
+          <span class="data">{{ user.data | date:'dd/MM/yyyy HH:mm' }}</span>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+</div>
+
+<!-- MODAL DINÂMICO -->
+<app-modal-admin 
+    *ngIf="modalAberto"
+    [tipo]="modalTipo"
+    [titulo]="modalTitulo"
+    (fechar)="modalAberto = false"
+    (atualizado)="carregarUltimos()">
+</app-modal-admin>
