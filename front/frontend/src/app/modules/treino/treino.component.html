@@ -7,8 +7,7 @@
     <div class="dias">
       <button 
         *ngFor="let dia of dias"
-        (click)="selecionarDia(dia)"
-      >
+        (click)="selecionarDia(dia)">
         {{ dia }}
       </button>
     </div>
@@ -19,16 +18,14 @@
 
     <div *ngIf="treinoSelecionado.length > 0; else semTreino">
 
-      <div 
-        class="exercicio" 
-        *ngFor="let item of treinoSelecionado"
-      >
-        <img [src]="item.imagem" alt="exercicio" />
+      <div class="exercicio" *ngFor="let item of treinoSelecionado">
 
         <div class="info">
-          <h3>{{ item.nome }}</h3>
-          <p>{{ item.repeticoes }}</p>
+          <h3>{{ item.exercicio }}</h3>
+          <p><strong>Séries:</strong> {{ item.series }}</p>
+          <p><strong>Repetições:</strong> {{ item.repeticoes }}</p>
         </div>
+
       </div>
 
     </div>

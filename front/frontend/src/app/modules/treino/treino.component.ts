@@ -1,57 +1,45 @@
-import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TreinoService } from '../../services/treino.service';
 
 @Component({
   selector: 'app-treino',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './treino.component.html',
   styleUrls: ['./treino.component.css']
 })
-export class TreinoComponent {
-  dias: string[] = [
-    'Segunda',
-    'Terça',
-    'Quarta',
-    'Quinta',
-    'Sexta',
-    'Sabado',
-    'Domingo'
-  ];
-   treinos: any = {
-    Segunda: [
-      {
-        nome: "Rotação lateral das pernas",
-        repeticoes: "6 rep.",
-        imagem: "assets/exercicios/rotacao.png"
-      },
-      {
-        nome: "Abdominal invertido",
-        repeticoes: "8 rep.",
-        imagem: "assets/exercicios/invertido.png"
-      },
-      {
-        nome: "Abdominal em V",
-        repeticoes: "10 rep.",
-        imagem: "assets/exercicios/v.png"
-      }
-    ],
-    Terça: [
-      { nome: "Flexão", repeticoes: "15 rep.", imagem: "assets/exercicios/flexao.png" },
-      { nome: "Prancha", repeticoes: "2 min", imagem: "assets/exercicios/prancha.png" }
-    ],
-    Quarta: [],
-    Quinta: [],
-    Sexta: [],
-    Sábado: [],
-    Domingo: []
-  };
+export class TreinoComponent implements OnInit {
 
-  
+  dias: string[] = [
+    'Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'
+  ];
+
   treinoSelecionado: any[] = [];
+  treinosDoAluno: any = {};
+
+  alunoId: number = 0;  // ← Você vai receber esse ID ao logar ou escolher aluno
+
+  constructor(private treinoService: TreinoService) {}
+
+  ngOnInit() {
+    // Exemplo: aluno já está logado e o ID foi salvo no localStorage
+    this.alunoId = Number(localStorage.getItem("alunoId") || 0);
+
+    this.carregarTreinos();
+  }
+
+  carregarTreinos() {
+    this.treinoService.getTreinosDoAluno(this.alunoId).subscribe({
+      next: (dados) => {
+        this.treinosDoAluno = dados;  // formato: { Segunda: [...], Terça: [...], ... }
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
   selecionarDia(dia: string) {
-    this.treinoSelecionado = this.treinos[dia] || [];
+    this.treinoSelecionado = this.treinosDoAluno[dia] || [];
   }
-}
 
+}

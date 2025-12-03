@@ -27,7 +27,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       {path: 'dieta', component: DietaComponent},
       {path: 'nutricionista/:id/:nome', component: NutricionistaComponent},
-      {path: 'treinoprof', component: TreinoprofComponent},
+      {path: 'treinoprof/:id', component: TreinoprofComponent},
       {path: 'escolher-aluno', component: EscolherAlunoComponent}
     ]
   }
