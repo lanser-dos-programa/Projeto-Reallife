@@ -18,4 +18,8 @@ export class TreinoService {
   salvarTreino(treino: any): Observable<any> {
     return this.http.post(`${this.api}`, treino);
   }
+
+  getTreinosDoAluno(alunoId: number) {
+    return this.http.get<any>(`${this.api}/aluno/${alunoId}`);
+  }
 }
