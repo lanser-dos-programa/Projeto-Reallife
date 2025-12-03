@@ -1,0 +1,30 @@
+# --- STAGE 1: BUILD ---
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+WORKDIR /app
+
+# Copia apenas o pom primeiro (cache eficiente)
+COPY pom.xml .
+
+# Baixa dependências (cache)
+RUN mvn dependency:go-offline -B
+
+# Agora copia o resto do código
+COPY src ./src
+
+# Builda o projeto (gera o .jar)
+RUN mvn clean package -DskipTests
+
+
+# --- STAGE 2: RUNTIME ---
+FROM eclipse-temurin:17-jdk
+
+WORKDIR /app
+
+# Copia o .jar buildado
+COPY --from=build /app/target/*.jar app.jar
+
+# Render define a porta via variável de ambiente $PORT
+EXPOSE 8080
+
+# Comando de entrada
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
