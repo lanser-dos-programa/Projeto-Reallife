@@ -1,33 +1,27 @@
 # ---------------------------------------------
-# ESTÁGIO 1: BUILD
-# Usa Java 17 para garantir compatibilidade total
+# ESTÁGIO 1: BUILD (Ignorando Testes)
 # ---------------------------------------------
 FROM maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
-
-# 1. Copia o pom.xml e o código-fonte
-# Assume que o Root Directory do Render é 'tcc'
 COPY pom.xml .
 COPY src ./src
 
-# 2. Executa o build (limpa o cache e ignora os testes)
-# O -DskipTests é vital para ignorar a falha de DB que vimos nos logs de teste.
-RUN mvn clean package -DskipTests
+# COMANDO CRÍTICO: Executa o build (install) e IGNORA OS TESTES (-DskipTests)
+# Isso é essencial para ambientes de CI/CD onde variáveis de ambiente do DB não estão prontas no momento do build.
+RUN mvn clean install -DskipTests
 
 # ---------------------------------------------
 # ESTÁGIO 2: EXECUÇÃO (Runtime)
-# Usa apenas o JRE para menor tamanho
 # ---------------------------------------------
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
-# 3. Nome exato do JAR, baseado no pom.xml
+# Nome exato do JAR (Baseado no seu pom.xml: tcc-0.0.1-SNAPSHOT.jar)
 ENV JAR_NAME tcc-0.0.1-SNAPSHOT.jar
 
-# 4. Copia o JAR criado no estágio de build para o estágio de execução
-# Se este caminho estiver incorreto, a Classe não será encontrada.
+# 3. Copia o JAR criado
 COPY --from=build /app/target/${JAR_NAME} app.jar
 
-# 5. Comando de execução
+# 4. Comando de execução
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]
